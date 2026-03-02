@@ -49,7 +49,7 @@ export default function Contact() {
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
               transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
               onSubmit={handleSubmit}
-              className="space-y-5 border border-[--border] rounded-2xl p-6 sm:p-8"
+              className="space-y-5 border border-[--border] p-6 sm:p-8"
               style={{ backgroundColor: "var(--card)" }}
             >
               <div className="grid sm:grid-cols-2 gap-5">
@@ -63,7 +63,7 @@ export default function Contact() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="Votre nom"
-                    className="w-full border border-[--border] rounded-lg px-4 py-3 text-[--foreground] focus:outline-none focus:border-[--accent] transition-colors text-sm"
+                    className="w-full border border-[--border] px-4 py-3 text-[--foreground] focus:outline-none focus:border-[--accent] transition-colors text-sm"
                     style={{ backgroundColor: "var(--background)" }}
                   />
                 </div>
@@ -77,7 +77,7 @@ export default function Contact() {
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     placeholder="votre@email.com"
-                    className="w-full border border-[--border] rounded-lg px-4 py-3 text-[--foreground] focus:outline-none focus:border-[--accent] transition-colors text-sm"
+                    className="w-full border border-[--border] px-4 py-3 text-[--foreground] focus:outline-none focus:border-[--accent] transition-colors text-sm"
                     style={{ backgroundColor: "var(--background)" }}
                   />
                 </div>
@@ -93,14 +93,14 @@ export default function Contact() {
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   placeholder="Décrivez votre projet ou votre demande..."
-                  className="w-full border border-[--border] rounded-lg px-4 py-3 text-[--foreground] focus:outline-none focus:border-[--accent] transition-colors text-sm resize-none"
+                  className="w-full border border-[--border] px-4 py-3 text-[--foreground] focus:outline-none focus:border-[--accent] transition-colors text-sm resize-none"
                   style={{ backgroundColor: "var(--background)" }}
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity duration-200 relative overflow-hidden"
+                className="w-full py-3 font-semibold text-sm hover:opacity-90 transition-opacity duration-200 relative overflow-hidden"
                 style={{ backgroundColor: "var(--accent)", color: "#fff" }}
               >
                 {sent ? "Message envoyé ✓" : "Envoyer le message"}

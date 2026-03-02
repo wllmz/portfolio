@@ -12,6 +12,14 @@ const services = [
     description:
       "Du site vitrine à l'application SaaS complète. Je conçois et développe des interfaces rapides, accessibles et mémorables avec React et Next.js.",
     tags: ["Next.js", "React", "TypeScript", "UI/UX"],
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="0" />
+        <path d="M8 21h8M12 17v4" />
+        <path d="M7 8h4M7 11h2" />
+        <path d="M15 9l2 2-2 2" />
+      </svg>
+    ),
   },
   {
     number: "02",
@@ -19,6 +27,14 @@ const services = [
     description:
       "Des architectures solides et scalables. Bases de données relationnelles, API REST ou GraphQL, authentication — tout ce qui fait tourner votre produit.",
     tags: ["Node.js", "PostgreSQL", "Prisma", "GraphQL"],
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <ellipse cx="12" cy="5" rx="9" ry="3" />
+        <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5" />
+        <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9" />
+        <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4" />
+      </svg>
+    ),
   },
   {
     number: "03",
@@ -26,6 +42,11 @@ const services = [
     description:
       "Un site lent fait fuir vos clients. J'optimise les Core Web Vitals, le SEO technique et l'accessibilité pour que votre produit performe vraiment.",
     tags: ["Lighthouse", "SEO", "A11y", "Core Web Vitals"],
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+      </svg>
+    ),
   },
 ];
 
@@ -62,17 +83,33 @@ function ServiceCard({ s, i }: { s: (typeof services)[0]; i: number }) {
       />
 
       <div className="relative z-10 grid md:grid-cols-[72px_1fr_auto] gap-4 sm:gap-6 items-start">
-        <motion.span
-          animate={{ color: hovered ? "var(--accent)" : "var(--foreground)" }}
-          transition={{ duration: 0.2 }}
-          className="text-sm font-bold pt-1 hidden md:block"
-          style={{ fontFamily: "var(--font-space-grotesk)" }}
-        >
-          {s.number}
-        </motion.span>
+        <div className="hidden md:flex flex-col items-start gap-3 pt-1">
+          <motion.span
+            animate={{ color: hovered ? "var(--accent)" : "var(--foreground)" }}
+            transition={{ duration: 0.2 }}
+            className="text-sm font-bold"
+            style={{ fontFamily: "var(--font-space-grotesk)" }}
+          >
+            {s.number}
+          </motion.span>
+          <motion.div
+            animate={{ color: hovered ? "var(--accent)" : "var(--foreground)" }}
+            transition={{ duration: 0.2 }}
+            style={{ opacity: hovered ? 1 : 0.4 }}
+          >
+            {s.icon}
+          </motion.div>
+        </div>
 
         <div>
           <div className="flex items-center gap-3 mb-2 md:hidden">
+            <motion.div
+              animate={{ color: hovered ? "var(--accent)" : "var(--foreground)" }}
+              transition={{ duration: 0.2 }}
+              style={{ opacity: hovered ? 1 : 0.5 }}
+            >
+              {s.icon}
+            </motion.div>
             <span
               className="text-xs font-bold"
               style={{
@@ -105,7 +142,7 @@ function ServiceCard({ s, i }: { s: (typeof services)[0]; i: number }) {
                 color: hovered ? "var(--accent)" : "var(--foreground)",
               }}
               transition={{ duration: 0.25 }}
-              className="text-xs px-2.5 py-1 rounded-full border"
+              className="text-xs px-2.5 py-1 border"
             >
               {tag}
             </motion.span>
@@ -124,6 +161,7 @@ export default function Services() {
     <section
       id="services"
       className="relative z-10 py-20 sm:py-28 px-4 sm:px-6"
+      style={{ backgroundColor: "var(--surface)" }}
     >
       <div className="max-w-6xl mx-auto w-full">
         <div className="mb-10 sm:mb-14">

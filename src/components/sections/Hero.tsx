@@ -9,44 +9,22 @@ import {
   useTransform,
   animate,
 } from "framer-motion";
+
 import { useEffect, useState, useRef } from "react";
 
 /* ─── Two mouse-reactive wireframe cubes ─── */
 type V3 = [number, number, number];
 const V: V3[] = [
-  [-1, -1, -1],
-  [1, -1, -1],
-  [1, 1, -1],
-  [-1, 1, -1],
-  [-1, -1, 1],
-  [1, -1, 1],
-  [1, 1, 1],
-  [-1, 1, 1],
+  [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+  [-1, -1, 1],  [1, -1, 1],  [1, 1, 1],  [-1, 1, 1],
 ];
 const E: [number, number][] = [
-  [0, 1],
-  [1, 2],
-  [2, 3],
-  [3, 0],
-  [4, 5],
-  [5, 6],
-  [6, 7],
-  [7, 4],
-  [0, 4],
-  [1, 5],
-  [2, 6],
-  [3, 7],
+  [0,1],[1,2],[2,3],[3,0],
+  [4,5],[5,6],[6,7],[7,4],
+  [0,4],[1,5],[2,6],[3,7],
 ];
-const rotX = (p: V3, a: number): V3 => [
-  p[0],
-  p[1] * Math.cos(a) - p[2] * Math.sin(a),
-  p[1] * Math.sin(a) + p[2] * Math.cos(a),
-];
-const rotY = (p: V3, a: number): V3 => [
-  p[0] * Math.cos(a) + p[2] * Math.sin(a),
-  p[1],
-  -p[0] * Math.sin(a) + p[2] * Math.cos(a),
-];
+const rotX = (p: V3, a: number): V3 => [p[0], p[1]*Math.cos(a)-p[2]*Math.sin(a), p[1]*Math.sin(a)+p[2]*Math.cos(a)];
+const rotY = (p: V3, a: number): V3 => [p[0]*Math.cos(a)+p[2]*Math.sin(a), p[1], -p[0]*Math.sin(a)+p[2]*Math.cos(a)];
 const lp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 function MouseCubes() {
@@ -56,10 +34,7 @@ function MouseCubes() {
     if (!c) return;
     const ctx = c.getContext("2d");
     if (!ctx) return;
-    const resize = () => {
-      c.width = c.offsetWidth;
-      c.height = c.offsetHeight;
-    };
+    const resize = () => { c.width = c.offsetWidth; c.height = c.offsetHeight; };
     resize();
     window.addEventListener("resize", resize);
     const mouse = { x: 0.5, y: 0.5 };
@@ -71,30 +46,18 @@ function MouseCubes() {
     };
     window.addEventListener("mousemove", onMove);
 
-    const draw = (
-      cx: number,
-      cy: number,
-      size: number,
-      rx: number,
-      ry: number,
-      alpha: number,
-      lw: number,
-    ) => {
+    const draw = (cx: number, cy: number, size: number, rx: number, ry: number, alpha: number, lw: number) => {
       const pts = V.map((v) => {
-        let p: V3 = [v[0] * size, v[1] * size, v[2] * size];
+        let p: V3 = [v[0]*size, v[1]*size, v[2]*size];
         p = rotX(p, rx);
         p = rotY(p, ry);
         const z = p[2] + 600;
         const s = 600 / Math.max(z, 1);
-        return [p[0] * s + cx, p[1] * s + cy] as [number, number];
+        return [p[0]*s+cx, p[1]*s+cy] as [number, number];
       });
-      const accent = getComputedStyle(document.documentElement)
-        .getPropertyValue("--accent")
-        .trim();
+      const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
       const h = accent.replace("#", "");
-      const r = parseInt(h.slice(0, 2), 16),
-        g = parseInt(h.slice(2, 4), 16),
-        b = parseInt(h.slice(4, 6), 16);
+      const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
       const rgb = isNaN(r) ? "59,130,246" : `${r},${g},${b}`;
       ctx.strokeStyle = `rgba(${rgb},${alpha})`;
       ctx.lineWidth = lw;
@@ -108,19 +71,15 @@ function MouseCubes() {
 
     let raf: number;
     const tick = () => {
-      const W = c.width,
-        H = c.height;
+      const W = c.width, H = c.height;
       ctx.clearRect(0, 0, W, H);
-
-      s1.rx = lp(s1.rx, (mouse.y - 0.5) * 1.4, 0.04);
-      s1.ry = lp(s1.ry, (mouse.x - 0.5) * 1.6, 0.04);
-      s2.rx = lp(s2.rx, -(mouse.y - 0.5) * 1.0 + 0.3, 0.025);
-      s2.ry = lp(s2.ry, -(mouse.x - 0.5) * 1.2 - 0.4, 0.025);
-
-      const cx = W * 0.82,
-        cy = H * 0.38;
+      s1.rx = lp(s1.rx, (mouse.y-0.5)*1.4, 0.04);
+      s1.ry = lp(s1.ry, (mouse.x-0.5)*1.6, 0.04);
+      s2.rx = lp(s2.rx, -(mouse.y-0.5)*1.0+0.3, 0.025);
+      s2.ry = lp(s2.ry, -(mouse.x-0.5)*1.2-0.4, 0.025);
+      const cx = W*0.82, cy = H*0.38;
       draw(cx, cy, 100, s1.rx, s1.ry, 0.6, 1.2);
-      draw(cx, cy, 50, s2.rx, s2.ry, 0.35, 0.9);
+      draw(cx, cy, 50,  s2.rx, s2.ry, 0.35, 0.9);
       raf = requestAnimationFrame(tick);
     };
     tick();
@@ -140,10 +99,10 @@ function MouseCubes() {
 }
 
 const roles = [
-  "Full Stack Developer",
-  "UI/UX Enthusiast",
-  "Problem Solver",
-  "Open Source Lover",
+  "Développeur Full Stack",
+  "Passionné UI/UX",
+  "Résolveur de problèmes",
+  "Artisan du web",
 ];
 
 function RotatingText() {

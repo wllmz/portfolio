@@ -19,10 +19,9 @@ export default function Home() {
         <Hero />
         <Divider />
         <Services />
+        <Projects />
         <Divider />
         <TechStack />
-        <Divider />
-        <Projects />
         <Divider />
         <About />
         <Divider />

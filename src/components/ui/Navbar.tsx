@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 const navLinks = [
   { label: "Services", href: "#services" },
-  { label: "Stack", href: "#stack" },
   { label: "Projets", href: "#projects" },
+  { label: "Compétences", href: "#stack" },
   { label: "À propos", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
@@ -58,7 +58,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <a
             href="#contact"
-            className="text-sm font-semibold px-5 py-2 rounded-full transition-all duration-200"
+            className="text-sm font-semibold px-5 py-2 transition-all duration-200"
             style={{ backgroundColor: "var(--accent)", color: "#ffffff" }}
           >
             Démarrons →

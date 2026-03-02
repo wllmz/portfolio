@@ -74,10 +74,10 @@ function TechRow({ cat, i }: { cat: (typeof categories)[0]; i: number }) {
             transition={{ duration: 0.4, ease: EASE, delay: 0.1 + i * 0.08 + ii * 0.04 }}
             onMouseEnter={() => setHoveredItem(item.name)}
             onMouseLeave={() => setHoveredItem(null)}
-            className="flex items-baseline gap-1.5 px-3.5 py-2 rounded-full border cursor-default transition-all duration-200"
+            className="flex items-baseline gap-1.5 px-3.5 py-2 border cursor-default transition-all duration-200"
             style={{
               borderColor: hoveredItem === item.name ? "var(--accent)" : "var(--border)",
-              backgroundColor: hoveredItem === item.name ? "var(--accent)/8" : "var(--surface)",
+              backgroundColor: hoveredItem === item.name ? "color-mix(in srgb, var(--accent) 10%, transparent)" : "var(--surface)",
             }}
           >
             <span
@@ -107,7 +107,7 @@ export default function TechStack() {
   const inView = useInView(ref, { once: false, margin: "-40px" });
 
   return (
-    <section id="stack" className="relative z-10 py-20 sm:py-28 px-4 sm:px-6">
+    <section id="stack" className="relative z-10 py-20 sm:py-28 px-4 sm:px-6" style={{ backgroundColor: "var(--surface)" }}>
       <div className="max-w-6xl mx-auto w-full">
 
         <div ref={ref} className="mb-10 sm:mb-14">
@@ -128,7 +128,7 @@ export default function TechStack() {
               className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold tracking-tight"
               style={{ color: "var(--foreground)", fontFamily: "var(--font-space-grotesk)" }}
             >
-              Stack
+              Compétences
             </motion.h2>
           </div>
         </div>

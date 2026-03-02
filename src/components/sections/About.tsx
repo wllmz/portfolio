@@ -28,12 +28,6 @@ const approach = [
   },
 ];
 
-const stats = [
-  { value: "20+", label: "projets livrés" },
-  { value: "5+", label: "ans d'expérience" },
-  { value: "15+", label: "clients satisfaits" },
-  { value: "100%", label: "remote-ready" },
-];
 
 export default function About() {
   const ref = useRef(null);
@@ -114,14 +108,14 @@ export default function About() {
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.6, ease: EASE, delay: 0.4 }}
-              className="inline-flex items-center gap-2 text-sm font-semibold w-fit px-5 py-2.5 rounded-full hover:opacity-90 transition-opacity duration-200"
+              className="inline-flex items-center gap-2 text-sm font-semibold w-fit px-5 py-2.5 hover:opacity-90 transition-opacity duration-200"
               style={{ backgroundColor: "var(--accent)", color: "#fff" }}
             >
               Travaillons ensemble →
             </motion.a>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px border border-[--border] rounded-xl overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px border border-[--border] overflow-hidden">
             {approach.map((item, i) => (
               <motion.div
                 key={item.num}
@@ -169,35 +163,6 @@ export default function About() {
           </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.7, ease: EASE, delay: 0.4 }}
-          className="grid grid-cols-2 md:grid-cols-4 border border-[--border] rounded-xl overflow-hidden"
-        >
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="flex flex-col items-center py-6 sm:py-8 px-3 border-r border-[--border] last:border-r-0"
-            >
-              <p
-                className="text-2xl sm:text-3xl font-bold mb-1"
-                style={{
-                  color: "var(--accent)",
-                  fontFamily: "var(--font-space-grotesk)",
-                }}
-              >
-                {stat.value}
-              </p>
-              <p
-                className="text-xs text-center opacity-70"
-                style={{ color: "var(--foreground)" }}
-              >
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
