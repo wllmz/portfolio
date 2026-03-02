@@ -225,9 +225,9 @@ const fadeUp: Variants = {
 
 export default function Hero() {
   return (
-    <section id="hero" className="min-h-screen relative z-10 overflow-x-hidden">
+    <section id="hero" className="relative z-10 overflow-x-hidden py-0 px-4 sm:px-6 min-h-screen flex flex-col justify-center">
       <MouseCubes />
-      <div className="flex flex-col justify-center px-6 pt-24 pb-16 max-w-6xl mx-auto min-h-screen">
+      <div className="max-w-6xl mx-auto w-full pt-24 pb-16">
         <motion.div
           variants={fadeUp}
           custom={0.2}
@@ -235,7 +235,7 @@ export default function Hero() {
           animate="show"
           className="mb-10"
         >
-          <span className="text-sm text-[--muted] font-medium tracking-wide">
+          <span className="text-sm text-[--foreground] opacity-60 font-medium tracking-wide">
             Développeur Freelance · Full Stack
           </span>
         </motion.div>
@@ -246,7 +246,7 @@ export default function Hero() {
             custom={0.3}
             initial="hidden"
             animate="show"
-            className="text-[--muted] text-lg mb-3"
+            className="text-[--foreground] opacity-60 text-lg mb-3"
             style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             Je construis des
@@ -292,7 +292,7 @@ export default function Hero() {
           custom={1.6}
           initial="hidden"
           animate="show"
-          className="text-[--muted] max-w-lg leading-relaxed mb-12 text-base"
+          className="text-[--foreground] opacity-70 max-w-lg leading-relaxed mb-8 text-base"
         >
           De l&apos;idée à la mise en production, je prends en charge la
           conception et le développement de vos projets web sur-mesure.
@@ -300,7 +300,30 @@ export default function Hero() {
 
         <motion.div
           variants={fadeUp}
-          custom={2}
+          custom={1.8}
+          initial="hidden"
+          animate="show"
+          className="flex flex-wrap gap-4 mb-12"
+        >
+          <a
+            href="#projects"
+            className="px-6 py-3 text-sm font-bold tracking-wide border-2 transition-all duration-200 hover:opacity-80"
+            style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
+          >
+            Voir les réalisations →
+          </a>
+          <a
+            href="#contact"
+            className="px-6 py-3 text-sm font-bold tracking-wide transition-all duration-200 hover:opacity-90"
+            style={{ backgroundColor: "var(--accent)", color: "#ffffff" }}
+          >
+            Me contacter →
+          </a>
+        </motion.div>
+
+        <motion.div
+          variants={fadeUp}
+          custom={2.2}
           initial="hidden"
           animate="show"
           className="border-t border-[--border] pt-10 flex gap-12"
@@ -317,7 +340,7 @@ export default function Hero() {
               >
                 <Counter to={s.to} suffix={s.suffix} />
               </p>
-              <p className="text-xs text-[--muted] whitespace-nowrap">
+              <p className="text-xs text-[--foreground] opacity-60 whitespace-nowrap">
                 {s.label}
               </p>
             </div>

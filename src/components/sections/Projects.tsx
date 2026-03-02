@@ -3,6 +3,8 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
 const projects = [
   {
     index: "01",
@@ -33,38 +35,36 @@ const projects = [
   },
 ];
 
-function ProjectRow({ p, i }: { p: typeof projects[0]; i: number }) {
+function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
   const [hovered, setHovered] = useState(false);
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const inView = useInView(ref, { once: false, margin: "-40px" });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: i * 0.1 }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      transition={{ duration: 0.7, ease: EASE, delay: i * 0.1 }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="border-t border-[--border] cursor-default group"
+      className="border-t border-[--border] cursor-default"
     >
-      {/* Main row */}
-      <div className="py-6 flex items-center gap-6 md:gap-10">
-        {/* Big number */}
+      <div className="py-5 sm:py-6 flex items-center gap-4 sm:gap-8 md:gap-10">
         <span
-          className="text-[56px] md:text-[72px] font-bold leading-none tabular-nums select-none transition-colors duration-300 flex-shrink-0"
+          className="text-[clamp(2.5rem,7vw,4.5rem)] font-bold leading-none tabular-nums select-none transition-colors duration-300 flex-shrink-0"
           style={{
             fontFamily: "var(--font-space-grotesk)",
-            color: hovered ? "var(--accent)" : "var(--border)",
+            color: hovered ? "var(--accent)" : "var(--foreground)",
+            opacity: hovered ? 1 : 0.25,
           }}
         >
           {p.index}
         </span>
 
-        {/* Title + category */}
         <div className="flex-1 min-w-0">
           <h3
-            className="text-2xl md:text-3xl font-bold leading-tight truncate transition-colors duration-200"
+            className="text-[clamp(1.1rem,2.5vw,1.875rem)] font-bold leading-tight truncate transition-colors duration-200"
             style={{
               fontFamily: "var(--font-space-grotesk)",
               color: hovered ? "var(--accent)" : "var(--foreground)",
@@ -72,58 +72,54 @@ function ProjectRow({ p, i }: { p: typeof projects[0]; i: number }) {
           >
             {p.title}
           </h3>
-          <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>
+          <p className="text-xs sm:text-sm mt-1 opacity-60" style={{ color: "var(--foreground)" }}>
             {p.category}
           </p>
         </div>
 
-        {/* Impact + arrow */}
-        <div className="hidden md:flex items-center gap-8 flex-shrink-0">
+        <div className="hidden md:flex items-center gap-6 lg:gap-8 flex-shrink-0">
           <div className="text-right">
             <p
-              className="text-xl font-bold leading-none"
+              className="text-base sm:text-xl font-bold leading-none"
               style={{ color: "var(--accent)", fontFamily: "var(--font-space-grotesk)" }}
             >
               {p.impact.value}
             </p>
-            <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>
+            <p className="text-xs mt-0.5 opacity-60" style={{ color: "var(--foreground)" }}>
               {p.impact.label}
             </p>
           </div>
           <motion.span
-            animate={{ x: hovered ? 4 : 0 }}
-            transition={{ duration: 0.2 }}
-            className="text-2xl"
-            style={{ color: hovered ? "var(--accent)" : "var(--muted)" }}
+            animate={{ x: hovered ? 5 : 0 }}
+            transition={{ duration: 0.25, ease: EASE }}
+            className="text-xl transition-colors duration-200"
+            style={{ color: hovered ? "var(--accent)" : "var(--foreground)" }}
           >
             →
           </motion.span>
         </div>
       </div>
 
-      {/* Expandable detail */}
       <AnimatePresence>
         {hovered && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.35, ease: EASE }}
             className="overflow-hidden"
           >
-            <div
-              className="pb-6 pt-2 pl-[88px] md:pl-[112px] flex flex-wrap items-end justify-between gap-4"
-            >
+            <div className="pb-5 pt-1 pl-[56px] sm:pl-[80px] md:pl-[104px] flex flex-wrap items-end justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <p className="text-sm leading-relaxed max-w-lg" style={{ color: "var(--muted)" }}>
+                <p className="text-sm leading-relaxed max-w-lg" style={{ color: "var(--foreground)" }}>
                   {p.description}
                 </p>
-                <div className="flex flex-wrap gap-2 mt-4">
+                <div className="flex flex-wrap gap-2 mt-3">
                   {p.tags.map((tag) => (
                     <span
                       key={tag}
                       className="text-xs font-medium px-2.5 py-1 rounded-full border"
-                      style={{ borderColor: "var(--border)", color: "var(--muted)" }}
+                      style={{ borderColor: "var(--border)", color: "var(--foreground)" }}
                     >
                       {tag}
                     </span>
@@ -156,50 +152,53 @@ function ProjectRow({ p, i }: { p: typeof projects[0]; i: number }) {
 
 export default function Projects() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const inView = useInView(ref, { once: false, margin: "-40px" });
 
   return (
-    <section id="projects" className="py-24 relative z-10 overflow-x-hidden">
-      <div className="max-w-6xl mx-auto px-6">
-        <div ref={ref} className="mb-14">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            className="text-xs font-bold tracking-widest uppercase mb-3"
-            style={{ color: "var(--accent)" }}
-          >
-            Réalisations
-          </motion.p>
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={{ clipPath: "inset(100% 0 0 0)", y: 12 }}
-              animate={inView ? { clipPath: "inset(0% 0 0 0)", y: 0 } : {}}
-              transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-              className="text-5xl md:text-6xl font-bold tracking-tight"
-              style={{ color: "var(--foreground)", fontFamily: "var(--font-space-grotesk)" }}
-            >
-              Projets
-            </motion.h2>
-          </div>
-          <motion.a
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.3 }}
-            href="#contact"
-            className="text-sm mt-3 inline-block transition-colors"
-            style={{ color: "var(--muted)" }}
-          >
-            Votre projet pourrait être le prochain →
-          </motion.a>
-        </div>
+    <section id="projects" className="relative z-10 overflow-x-hidden py-20 sm:py-28 px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto w-full">
 
-        <div>
-          {projects.map((p, i) => (
-            <ProjectRow key={p.index} p={p} i={i} />
-          ))}
-          <div className="border-t border-[--border]" />
+          <div ref={ref} className="mb-10 sm:mb-14">
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{ duration: 0.6, ease: EASE }}
+              className="text-xs font-bold tracking-widest uppercase mb-3"
+              style={{ color: "var(--accent)" }}
+            >
+              Réalisations
+            </motion.p>
+            <div className="overflow-hidden">
+              <motion.h2
+                initial={{ clipPath: "inset(100% 0 0 0)", y: 12 }}
+                animate={inView ? { clipPath: "inset(0% 0 0 0)", y: 0 } : { clipPath: "inset(100% 0 0 0)", y: 12 }}
+                transition={{ duration: 0.9, ease: EASE }}
+                className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold tracking-tight"
+                style={{ color: "var(--foreground)", fontFamily: "var(--font-space-grotesk)" }}
+              >
+                Projets
+              </motion.h2>
+            </div>
+            <motion.a
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
+              href="#contact"
+              className="text-sm mt-3 inline-block hover:text-[--accent] transition-colors"
+              style={{ color: "var(--foreground)" }}
+            >
+              Votre projet pourrait être le prochain →
+            </motion.a>
+          </div>
+
+          <div>
+            {projects.map((p, i) => (
+              <ProjectRow key={p.index} p={p} i={i} />
+            ))}
+            <div className="border-t border-[--border]" />
+          </div>
+
         </div>
-      </div>
     </section>
   );
 }

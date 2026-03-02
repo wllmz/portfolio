@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ThemeToggle from "@/components/ui/ThemeToggle";
-
 const navLinks = [
   { label: "Services", href: "#services" },
   { label: "Stack", href: "#stack" },
@@ -48,7 +46,7 @@ export default function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="text-[--muted] hover:text-[--foreground] transition-colors text-sm font-medium relative group"
+                className="text-[--foreground] opacity-70 hover:opacity-100 transition-opacity text-sm font-medium relative group"
               >
                 {link.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[--accent] transition-all group-hover:w-full" />
@@ -58,7 +56,6 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden md:flex items-center gap-3">
-          <ThemeToggle />
           <a
             href="#contact"
             className="text-sm font-semibold px-5 py-2 rounded-full transition-all duration-200"
@@ -95,16 +92,13 @@ export default function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="text-[--muted] hover:text-[--foreground] transition-colors text-sm font-medium"
+                    className="text-[--foreground] opacity-70 hover:opacity-100 transition-opacity text-sm font-medium"
                   >
                     {link.label}
                   </a>
                 </li>
               ))}
             </ul>
-            <div className="px-6 pb-4 flex items-center gap-3">
-              <ThemeToggle />
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
