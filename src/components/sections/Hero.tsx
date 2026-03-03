@@ -92,7 +92,7 @@ function MouseCubes() {
   return (
     <canvas
       ref={ref}
-      className="absolute inset-0 w-full h-full pointer-events-none"
+      className="absolute inset-0 w-full h-full pointer-events-none hidden sm:block"
       style={{ zIndex: 0 }}
     />
   );
@@ -184,7 +184,10 @@ const fadeUp: Variants = {
 
 export default function Hero() {
   return (
-    <section id="hero" className="relative z-10 overflow-x-hidden py-0 px-4 sm:px-6 min-h-screen flex flex-col justify-center">
+    <section
+      id="hero"
+      className="relative z-10 overflow-x-hidden py-0 px-4 sm:px-6 min-h-screen flex flex-col justify-center"
+    >
       <MouseCubes />
       <div className="max-w-6xl mx-auto w-full pt-24 pb-16">
         <motion.div
@@ -192,7 +195,7 @@ export default function Hero() {
           custom={0.2}
           initial="hidden"
           animate="show"
-          className="mb-10"
+          className="mb-6 sm:mb-10 text-center sm:text-left"
         >
           <span className="text-sm text-[--foreground] opacity-60 font-medium tracking-wide">
             Développeur Freelance · Full Stack
@@ -205,7 +208,7 @@ export default function Hero() {
             custom={0.3}
             initial="hidden"
             animate="show"
-            className="text-[--foreground] opacity-60 text-lg mb-3"
+            className="text-[--foreground] opacity-60 text-lg mb-3 text-center sm:text-left"
             style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             Je construis des
@@ -214,7 +217,7 @@ export default function Hero() {
             variants={container}
             initial="hidden"
             animate="show"
-            className="flex flex-wrap gap-x-4 gap-y-0"
+            className="flex flex-wrap gap-x-4 gap-y-0 justify-center sm:justify-start text-center sm:text-left"
           >
             {words.map((word, i) => (
               <div key={i} className="overflow-hidden">
@@ -241,7 +244,7 @@ export default function Hero() {
           custom={1.4}
           initial="hidden"
           animate="show"
-          className="mb-6 h-6 flex items-center"
+          className="mb-6 h-6 flex items-center justify-center sm:justify-start"
         >
           <RotatingText />
         </motion.div>
@@ -251,7 +254,7 @@ export default function Hero() {
           custom={1.6}
           initial="hidden"
           animate="show"
-          className="text-[--foreground] opacity-70 max-w-lg leading-relaxed mb-8 text-base"
+          className="text-[--foreground] opacity-70 max-w-lg leading-relaxed mb-8 text-base text-center sm:text-left mx-auto sm:mx-0"
         >
           De l&apos;idée à la mise en production, je prends en charge la
           conception et le développement de vos projets web sur-mesure.
@@ -262,7 +265,7 @@ export default function Hero() {
           custom={1.8}
           initial="hidden"
           animate="show"
-          className="flex flex-wrap gap-4 mb-12"
+          className="flex flex-wrap gap-4 mb-10 sm:mb-12 justify-center sm:justify-start"
         >
           <a
             href="#projects"
@@ -285,16 +288,16 @@ export default function Hero() {
           custom={2.2}
           initial="hidden"
           animate="show"
-          className="border-t border-[--border] pt-10 flex gap-12"
+          className="border-t border-[--border] pt-8 sm:pt-10 flex flex-wrap gap-6 sm:gap-10"
         >
           {[
             { to: 20, suffix: "+", label: "projets livrés" },
             { to: 5, suffix: "+", label: "ans d'expérience" },
             { to: 15, suffix: "+", label: "clients satisfaits" },
           ].map((s) => (
-            <div key={s.label} className="flex flex-col gap-1">
+            <div key={s.label} className="flex flex-col gap-1 min-w-[7rem]">
               <p
-                className="text-3xl font-bold text-[--foreground] leading-none"
+                className="text-2xl sm:text-3xl font-bold text-[--foreground] leading-none"
                 style={{ fontFamily: "var(--font-space-grotesk)" }}
               >
                 <Counter to={s.to} suffix={s.suffix} />

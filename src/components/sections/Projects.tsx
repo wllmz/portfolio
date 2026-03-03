@@ -63,7 +63,7 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
       onClick={() => setTapped((v) => !v)}
       className="border-t border-[--border] cursor-default select-none"
     >
-      <div className="py-5 sm:py-6 flex items-center gap-4 sm:gap-8 md:gap-10">
+      <div className="py-5 sm:py-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 md:gap-10">
         <span
           className="text-[clamp(2.5rem,7vw,4.5rem)] font-bold leading-none tabular-nums select-none transition-colors duration-300 flex-shrink-0"
           style={{
@@ -77,7 +77,7 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
 
         <div className="flex-1 min-w-0">
           <h3
-            className="text-[clamp(1.1rem,2.5vw,1.875rem)] font-bold leading-tight truncate transition-colors duration-200"
+            className="text-[clamp(1.1rem,2.5vw,1.875rem)] font-bold leading-tight transition-colors duration-200"
             style={{
               fontFamily: "var(--font-space-grotesk)",
               color: expanded ? "var(--accent)" : "var(--foreground)",
@@ -93,7 +93,7 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
           </p>
         </div>
 
-        <div className="flex items-center gap-4 sm:gap-6 lg:gap-8 flex-shrink-0">
+        <div className="flex items-center gap-2 xs:gap-4 sm:gap-6 lg:gap-8 flex-shrink-0 self-end xs:self-auto">
           <div className="hidden sm:block text-right">
             <p
               className="text-base sm:text-xl font-bold leading-none"
@@ -131,7 +131,7 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
             transition={{ duration: 0.35, ease: EASE }}
             className="overflow-hidden"
           >
-            <div className="pb-6 pt-1 pl-[56px] sm:pl-[80px] md:pl-[104px] flex flex-col gap-5">
+            <div className="pb-6 pt-1 pl-0 sm:pl-[56px] md:pl-[80px] lg:pl-[104px] flex flex-col gap-5">
               {/* Bloc visuel */}
               <div
                 className="w-full h-32 sm:h-40 flex items-end p-5 overflow-hidden relative"
@@ -232,7 +232,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="relative z-10 overflow-x-hidden py-20 sm:py-28 px-4 sm:px-6"
+      className="relative z-10 overflow-x-hidden py-16 sm:py-24 px-4 sm:px-6"
     >
       <div className="max-w-6xl mx-auto w-full">
         <div ref={ref} className="mb-10 sm:mb-14">
@@ -240,7 +240,7 @@ export default function Projects() {
             initial={{ opacity: 0, y: 10 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ duration: 0.6, ease: EASE }}
-            className="text-xs font-bold tracking-widest uppercase mb-3"
+            className="text-xs font-bold tracking-widest uppercase mb-3 text-center sm:text-left"
             style={{ color: "var(--accent)" }}
           >
             Réalisations
@@ -254,7 +254,7 @@ export default function Projects() {
                   : { clipPath: "inset(100% 0 0 0)", y: 12 }
               }
               transition={{ duration: 0.9, ease: EASE }}
-              className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold tracking-tight"
+              className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold tracking-tight text-center sm:text-left"
               style={{
                 color: "var(--foreground)",
                 fontFamily: "var(--font-space-grotesk)",
@@ -268,7 +268,7 @@ export default function Projects() {
             animate={inView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
             href="#contact"
-            className="text-sm mt-3 inline-block hover:text-[--accent] transition-colors"
+            className="text-sm mt-3 inline-block hover:text-[--accent] transition-colors text-center sm:text-left"
             style={{ color: "var(--foreground)" }}
           >
             Votre projet pourrait être le prochain →

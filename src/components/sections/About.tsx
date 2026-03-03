@@ -31,12 +31,12 @@ const approach = [
 
 export default function About() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-60px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
     <section id="about" className="relative z-10 py-20 sm:py-28 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto w-full">
-        <div ref={ref} className="mb-12 sm:mb-16">
+        <div ref={ref} className="mb-12 sm:mb-16 text-center sm:text-left">
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
@@ -71,7 +71,7 @@ export default function About() {
             initial={{ opacity: 0, y: 24 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
             transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
-            className="flex flex-col justify-between gap-6 sm:gap-8"
+            className="flex flex-col justify-between gap-6 sm:gap-8 text-left"
           >
             <div className="space-y-4">
               <p
