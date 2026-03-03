@@ -1,9 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
-
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+import { useEffect, useRef, useState } from "react";
 
 const services = [
   {
@@ -13,7 +10,16 @@ const services = [
       "Du site vitrine à l'application SaaS complète. Je conçois et développe des interfaces rapides, accessibles et mémorables avec React et Next.js.",
     tags: ["Next.js", "React", "TypeScript", "UI/UX"],
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <rect x="2" y="3" width="20" height="14" rx="0" />
         <path d="M8 21h8M12 17v4" />
         <path d="M7 8h4M7 11h2" />
@@ -28,7 +34,16 @@ const services = [
       "Des architectures solides et scalables. Bases de données relationnelles, API REST ou GraphQL, authentication — tout ce qui fait tourner votre produit.",
     tags: ["Node.js", "PostgreSQL", "Prisma", "GraphQL"],
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <ellipse cx="12" cy="5" rx="9" ry="3" />
         <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5" />
         <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9" />
@@ -43,156 +58,148 @@ const services = [
       "Un site lent fait fuir vos clients. J'optimise les Core Web Vitals, le SEO technique et l'accessibilité pour que votre produit performe vraiment.",
     tags: ["Lighthouse", "SEO", "A11y", "Core Web Vitals"],
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
       </svg>
     ),
   },
 ];
 
-function ServiceCard({ s, i }: { s: (typeof services)[0]; i: number }) {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-60px" });
+export default function Services() {
+  const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: -32 }}
-      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -32 }}
-      transition={{ duration: 0.7, ease: EASE, delay: i * 0.08 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="relative border-t border-[--border] py-7 overflow-hidden cursor-default"
-      style={{
-        borderBottom:
-          i === services.length - 1 ? "1px solid var(--border)" : "none",
-      }}
+    <section
+      ref={sectionRef}
+      id="services"
+      style={{ height: `${services.length * 100}vh` }}
     >
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: hovered ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: EASE }}
-        className="absolute inset-0 bg-[--accent]/10"
-        style={{ transformOrigin: "left" }}
-      />
-      <motion.div
-        animate={{ scaleY: hovered ? 1 : 0 }}
-        transition={{ duration: 0.4, ease: EASE }}
-        className="absolute left-0 top-0 bottom-0 w-0.5 bg-[--accent] origin-bottom"
-      />
-
-      <div className="relative z-10 grid md:grid-cols-[72px_1fr_auto] gap-4 sm:gap-6 items-start">
-        <div className="hidden md:flex flex-col items-start gap-3 pt-1">
-          <motion.span
-            animate={{ color: hovered ? "var(--accent)" : "var(--foreground)" }}
-            transition={{ duration: 0.2 }}
-            className="text-sm font-bold"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
+      {services.map((s, i) => (
+        <div
+          key={s.number}
+          className="sticky top-0 h-screen flex flex-col items-center justify-center px-4"
+          style={{
+            zIndex: i + 2,
+            backgroundColor: "var(--surface)",
+            borderTop: i > 0 ? "1px solid var(--border)" : "none",
+          }}
+        >
+          {/* Grand numéro derrière la carte */}
+          <div
+            className="absolute inset-0 flex items-center justify-center select-none pointer-events-none overflow-hidden"
+            style={{ zIndex: 0 }}
           >
-            {s.number}
-          </motion.span>
-          <motion.div
-            animate={{ color: hovered ? "var(--accent)" : "var(--foreground)" }}
-            transition={{ duration: 0.2 }}
-            style={{ opacity: hovered ? 1 : 0.4 }}
-          >
-            {s.icon}
-          </motion.div>
-        </div>
-
-        <div>
-          <div className="flex items-center gap-3 mb-2 md:hidden">
-            <motion.div
-              animate={{ color: hovered ? "var(--accent)" : "var(--foreground)" }}
-              transition={{ duration: 0.2 }}
-              style={{ opacity: hovered ? 1 : 0.5 }}
-            >
-              {s.icon}
-            </motion.div>
             <span
-              className="text-xs font-bold"
+              className="font-bold leading-none"
               style={{
+                fontSize: "clamp(18rem, 45vw, 38rem)",
                 color: "var(--accent)",
+                opacity: 0.04,
                 fontFamily: "var(--font-space-grotesk)",
               }}
             >
               {s.number}
             </span>
           </div>
-          <motion.h3
-            animate={{ x: hovered ? 6 : 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-            className="text-lg sm:text-xl font-bold mb-2 text-[--foreground]"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
+
+          {/* Section label */}
+          <p
+            className="text-xs font-bold tracking-widest uppercase mb-6"
+            style={{ color: "var(--accent)", zIndex: 1 }}
           >
-            {s.title}
-          </motion.h3>
-          <p className="text-sm leading-relaxed text-[--foreground] max-w-xl opacity-80">
-            {s.description}
+            Services
           </p>
-        </div>
 
-        <div className="flex flex-wrap gap-1.5 md:justify-end">
-          {s.tags.map((tag) => (
-            <motion.span
-              key={tag}
-              animate={{
-                borderColor: hovered ? "var(--accent)" : "var(--border)",
-                color: hovered ? "var(--accent)" : "var(--foreground)",
-              }}
-              transition={{ duration: 0.25 }}
-              className="text-xs px-2.5 py-1 border"
-            >
-              {tag}
-            </motion.span>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-export default function Services() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-80px" });
-
-  return (
-    <section
-      id="services"
-      className="relative z-10 py-20 sm:py-28 px-4 sm:px-6"
-      style={{ backgroundColor: "var(--surface)" }}
-    >
-      <div className="max-w-6xl mx-auto w-full">
-        <div className="mb-10 sm:mb-14">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ duration: 0.6, ease: EASE }}
-            className="text-[--accent] text-xs font-bold tracking-widest uppercase mb-3"
+          {/* ── CARD ── */}
+          <div
+            className="relative w-full overflow-hidden"
+            style={{
+              zIndex: 1,
+              maxWidth: 500,
+              backgroundColor: "var(--card)",
+              border: "1px solid var(--border)",
+              padding: "clamp(1.75rem, 4vw, 2.75rem)",
+            }}
           >
-            Ce que je fais
-          </motion.p>
-          <div className="overflow-hidden">
-            <motion.h2
-              ref={ref}
-              initial={{ y: "100%" }}
-              animate={inView ? { y: "0%" } : { y: "100%" }}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold text-[--foreground] tracking-tight"
-              style={{ fontFamily: "var(--font-space-grotesk)" }}
-            >
-              Services
-            </motion.h2>
-          </div>
-        </div>
+            {/* Content */}
+            <div className="relative z-10">
+              {/* Number + icon */}
+              <div className="flex items-center justify-between mb-5">
+                <span
+                  className="text-xs font-bold tracking-widest"
+                  style={{ color: "var(--muted)" }}
+                >
+                  {s.number} / {String(services.length).padStart(2, "0")}
+                </span>
+                <div style={{ color: "var(--accent)", opacity: 0.8 }}>
+                  {s.icon}
+                </div>
+              </div>
 
-        <div>
-          {services.map((s, i) => (
-            <ServiceCard key={s.number} s={s} i={i} />
-          ))}
+              {/* Title */}
+              <h2
+                className="font-bold leading-tight mb-4"
+                style={{
+                  fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
+                  color: "var(--foreground)",
+                  fontFamily: "var(--font-space-grotesk)",
+                }}
+              >
+                {s.title}
+              </h2>
+
+              {/* Divider */}
+              <div
+                className="mb-4"
+                style={{ height: 1, backgroundColor: "var(--border)" }}
+              />
+
+              {/* Description */}
+              <p
+                className="text-sm leading-relaxed mb-6"
+                style={{ color: "var(--muted)" }}
+              >
+                {s.description}
+              </p>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2">
+                {s.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs font-medium px-3 py-1.5 border"
+                    style={{
+                      borderColor: "var(--border)",
+                      color: "var(--accent)",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll hint */}
+          {i < services.length - 1 && (
+            <p
+              className="absolute bottom-10 text-xs"
+              style={{ color: "var(--muted)", opacity: 0.45, zIndex: 1 }}
+            >
+              Scroll ↓
+            </p>
+          )}
         </div>
-      </div>
+      ))}
     </section>
   );
 }

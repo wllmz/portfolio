@@ -2,22 +2,45 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
 const navLinks = [
-  { label: "Services", href: "#services" },
-  { label: "Projets", href: "#projects" },
-  { label: "Compétences", href: "#stack" },
-  { label: "À propos", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Accueil", href: "#hero", id: "hero" },
+  { label: "Services", href: "#services", id: "services" },
+  { label: "Projets", href: "#projects", id: "projects" },
+  { label: "Compétences", href: "#stack", id: "stack" },
+  { label: "À propos", href: "#about", id: "about" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* ── Active section via IntersectionObserver ── */
+  useEffect(() => {
+    const ids = [...navLinks.map((l) => l.id), "contact"];
+    const observers: IntersectionObserver[] = [];
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id);
+        },
+        { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   return (
@@ -31,39 +54,45 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Logo — gauche */}
         <a
           href="#hero"
-          className="text-xl font-bold text-[--foreground] hover:text-[--accent] transition-colors"
+          className="text-xl font-bold text-[--foreground] hover:text-[--accent] transition-colors flex-shrink-0"
           style={{ fontFamily: "var(--font-space-grotesk)" }}
         >
-          Votre Nom<span style={{ color: "var(--accent)" }}>.</span>
+          WLLM<span style={{ color: "var(--accent)" }}>.</span>Z
         </a>
 
-        {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="text-[--foreground] opacity-70 hover:opacity-100 transition-opacity text-sm font-medium relative group"
-              >
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[--accent] transition-all group-hover:w-full" />
-              </a>
-            </li>
-          ))}
+        {/* Desktop links — droite */}
+        <ul className="hidden md:flex items-center gap-7">
+          {navLinks.map((link) => {
+            const active = activeSection === link.id;
+            return (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className="relative text-sm font-medium transition-colors duration-200 pb-1"
+                  style={{ opacity: active ? 1 : 0.55 }}
+                >
+                  {link.label}
+                  {active && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute bottom-0 left-0 right-0 h-px"
+                      style={{ backgroundColor: "var(--accent)" }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 32,
+                      }}
+                    />
+                  )}
+                </a>
+              </li>
+            );
+          })}
         </ul>
-
-        <div className="hidden md:flex items-center gap-3">
-          <a
-            href="#contact"
-            className="text-sm font-semibold px-5 py-2 transition-all duration-200"
-            style={{ backgroundColor: "var(--accent)", color: "#ffffff" }}
-          >
-            Démarrons →
-          </a>
-        </div>
 
         {/* Mobile burger */}
         <button
@@ -71,9 +100,15 @@ export default function Navbar() {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Menu"
         >
-          <span className={`block h-0.5 w-6 bg-[--foreground] transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
-          <span className={`block h-0.5 w-6 bg-[--foreground] transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
-          <span className={`block h-0.5 w-6 bg-[--foreground] transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+          <span
+            className={`block h-0.5 w-6 bg-[--foreground] transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
+          />
+          <span
+            className={`block h-0.5 w-6 bg-[--foreground] transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`}
+          />
+          <span
+            className={`block h-0.5 w-6 bg-[--foreground] transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+          />
         </button>
       </nav>
 
@@ -92,12 +127,26 @@ export default function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="text-[--foreground] opacity-70 hover:opacity-100 transition-opacity text-sm font-medium"
+                    className="text-[--foreground] text-sm font-medium transition-opacity"
+                    style={{ opacity: activeSection === link.id ? 1 : 0.6 }}
                   >
                     {link.label}
                   </a>
                 </li>
               ))}
+              <li>
+                <a
+                  href="#contact"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-sm font-semibold px-4 py-2 inline-block"
+                  style={{
+                    backgroundColor: "var(--foreground)",
+                    color: "var(--background)",
+                  }}
+                >
+                  Contact
+                </a>
+              </li>
             </ul>
           </motion.div>
         )}

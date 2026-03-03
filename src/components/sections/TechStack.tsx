@@ -1,146 +1,283 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-const categories = [
+const stacks = [
   {
+    number: "01",
     label: "Frontend",
-    items: [
-      { name: "React",         sub: "UI Library" },
-      { name: "Next.js",       sub: "Framework"  },
-      { name: "TypeScript",    sub: "Language"   },
-      { name: "Tailwind CSS",  sub: "Styling"    },
-      { name: "Framer Motion", sub: "Animation"  },
-      { name: "Figma",         sub: "Design"     },
+    title: "Interfaces modernes & réactives",
+    description:
+      "React, Next.js et TypeScript pour construire des interfaces propres, rapides et maintenables, pensées pour le produit avant tout.",
+    tags: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Figma",
     ],
   },
   {
+    number: "02",
     label: "Backend",
-    items: [
-      { name: "Node.js",    sub: "Runtime"  },
-      { name: "PostgreSQL", sub: "Database" },
-      { name: "Prisma",     sub: "ORM"      },
-      { name: "GraphQL",    sub: "API"      },
-      { name: "Redis",      sub: "Cache"    },
-      { name: "REST API",   sub: "Protocol" },
-    ],
+    title: "Fondations solides & scalables",
+    description:
+      "APIs robustes, bases de données bien structurées et logique métier claire pour supporter la croissance de votre produit.",
+    tags: ["Node.js", "PostgreSQL", "Prisma", "GraphQL", "Redis", "REST API"],
   },
   {
+    number: "03",
     label: "DevOps",
-    items: [
-      { name: "Docker",         sub: "Container" },
-      { name: "GitHub Actions", sub: "CI/CD"     },
-      { name: "Vercel",         sub: "Deploy"    },
-      { name: "AWS",            sub: "Cloud"     },
-      { name: "Linux",          sub: "OS"        },
-      { name: "Nginx",          sub: "Server"    },
+    title: "Mises en production fiables",
+    description:
+      "De la conteneurisation au déploiement automatisé, pour des livraisons rapides et des environnements stables.",
+    tags: [
+      "Docker",
+      "GitHub Actions",
+      "Vercel",
+      "AWS",
+      "Linux",
+      "Nginx",
     ],
   },
 ];
 
-function TechRow({ cat, i }: { cat: (typeof categories)[0]; i: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-40px" });
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+function SideScrollIndicator({
+  total,
+  sectionRef,
+}: {
+  total: number;
+  sectionRef: React.RefObject<HTMLElement | null>;
+}) {
+  const [visible, setVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = sectionRef.current;
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const viewportH = window.innerHeight;
+
+      if (rect.bottom <= 0 || rect.top >= viewportH) {
+        setVisible(false);
+        return;
+      }
+
+      setVisible(true);
+
+      const scrollable = rect.height - viewportH;
+      if (scrollable <= 0) {
+        setProgress(0);
+        return;
+      }
+
+      const raw = -rect.top / scrollable;
+      const clamped = Math.min(1, Math.max(0, raw));
+      setProgress(clamped);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [sectionRef]);
+
+  if (!visible) return null;
+
+  const barHeight = 140;
+  const knobSize = 10;
+  const travel = barHeight - knobSize;
+  const offset = travel * progress;
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.7, ease: EASE, delay: i * 0.1 }}
-      className="border-t border-[--border] py-7 flex flex-col sm:grid sm:grid-cols-[160px_1fr] gap-4 sm:gap-8 items-start"
-    >
-      {/* Category label */}
-      <div className="flex items-center gap-2 pt-0.5">
-        <span
-          className="text-xs font-bold tracking-widest uppercase"
-          style={{ color: "var(--accent)" }}
-        >
-          {cat.label}
-        </span>
-      </div>
-
-      {/* Tech tags */}
-      <div className="flex flex-wrap gap-2">
-        {cat.items.map((item, ii) => (
-          <motion.div
-            key={item.name}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.4, ease: EASE, delay: 0.1 + i * 0.08 + ii * 0.04 }}
-            onMouseEnter={() => setHoveredItem(item.name)}
-            onMouseLeave={() => setHoveredItem(null)}
-            className="flex items-baseline gap-1.5 px-3.5 py-2 border cursor-default transition-all duration-200"
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-[25] hidden sm:flex flex-col items-center gap-3 pointer-events-none">
+      <span
+        className="text-[10px] font-bold tracking-[0.2em] uppercase"
+        style={{ color: "var(--muted)" }}
+      >
+        Stack
+      </span>
+      <div
+        style={{
+          position: "relative",
+          height: barHeight,
+          width: 2,
+          backgroundColor: "var(--border)",
+        }}
+      >
+        {/* repères */}
+        {Array.from({ length: total }).map((_, idx) => (
+          <div
+            key={idx}
             style={{
-              borderColor: hoveredItem === item.name ? "var(--accent)" : "var(--border)",
-              backgroundColor: hoveredItem === item.name ? "color-mix(in srgb, var(--accent) 10%, transparent)" : "var(--surface)",
+              position: "absolute",
+              left: "50%",
+              top:
+                total === 1
+                  ? barHeight / 2
+                  : (barHeight - 2) * (idx / (total - 1)),
+              transform: "translateX(-50%)",
+              width: 8,
+              height: 1,
+              backgroundColor: "var(--border)",
             }}
-          >
-            <span
-              className="text-sm font-semibold transition-colors duration-200"
-              style={{
-                color: hoveredItem === item.name ? "var(--accent)" : "var(--foreground)",
-                fontFamily: "var(--font-space-grotesk)",
-              }}
-            >
-              {item.name}
-            </span>
-            <span
-              className="text-[10px] font-medium opacity-50"
-              style={{ color: "var(--foreground)" }}
-            >
-              {item.sub}
-            </span>
-          </motion.div>
+          />
         ))}
+
+        {/* curseur */}
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: offset,
+            transform: "translate(-50%, 0)",
+            width: knobSize,
+            height: knobSize,
+            backgroundColor: "var(--accent)",
+          }}
+        />
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export default function TechStack() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-40px" });
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   return (
-    <section id="stack" className="relative z-10 py-20 sm:py-28 px-4 sm:px-6" style={{ backgroundColor: "var(--surface)" }}>
-      <div className="max-w-6xl mx-auto w-full">
+    <section
+      ref={sectionRef}
+      id="stack"
+      style={{ height: `${stacks.length * 100}vh` }}
+    >
+      <SideScrollIndicator total={stacks.length} sectionRef={sectionRef} />
 
-        <div ref={ref} className="mb-10 sm:mb-14">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ duration: 0.6, ease: EASE }}
-            className="text-xs font-bold tracking-widest uppercase mb-3"
-            style={{ color: "var(--accent)" }}
+      {stacks.map((s, i) => (
+        <div
+          key={s.number}
+          className="sticky top-0 h-screen flex flex-col items-center justify-center px-4"
+          style={{
+            zIndex: i + 2,
+            backgroundColor: "var(--surface)",
+            borderTop: i > 0 ? "1px solid var(--border)" : "none",
+          }}
+        >
+          {/* Grand label derrière la carte */}
+          <div
+            className="absolute inset-0 flex items-center justify-center select-none pointer-events-none overflow-hidden"
+            style={{ zIndex: 0 }}
           >
-            Technologies
-          </motion.p>
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={{ clipPath: "inset(100% 0 0 0)", y: 12 }}
-              animate={inView ? { clipPath: "inset(0% 0 0 0)", y: 0 } : { clipPath: "inset(100% 0 0 0)", y: 12 }}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold tracking-tight"
-              style={{ color: "var(--foreground)", fontFamily: "var(--font-space-grotesk)" }}
+            <span
+              className="font-bold leading-none"
+              style={{
+                fontSize: "clamp(8rem, 26vw, 16rem)",
+                color: "var(--accent)",
+                opacity: 0.04,
+                fontFamily: "var(--font-space-grotesk)",
+                letterSpacing: "0.1em",
+              }}
             >
-              Compétences
-            </motion.h2>
+              {s.label.toUpperCase()}
+            </span>
           </div>
-        </div>
 
-        <div>
-          {categories.map((cat, i) => (
-            <TechRow key={cat.label} cat={cat} i={i} />
-          ))}
-          <div className="border-t border-[--border]" />
-        </div>
+          {/* Section label */}
+          <p
+            className="text-xs font-bold tracking-widest uppercase mb-6"
+            style={{ color: "var(--accent)", zIndex: 1 }}
+          >
+            Compétences
+          </p>
 
-      </div>
+          {/* ── CARD ── */}
+          <div
+            className="relative w-full overflow-hidden"
+            style={{
+              zIndex: 1,
+              maxWidth: 520,
+              backgroundColor: "var(--card)",
+              border: "1px solid var(--border)",
+              padding: "clamp(1.75rem, 4vw, 2.75rem)",
+            }}
+          >
+            <div className="relative z-10">
+              {/* Number + label */}
+              <div className="flex items-center justify-between mb-5">
+                <span
+                  className="text-xs font-bold tracking-widest"
+                  style={{ color: "var(--muted)" }}
+                >
+                  {s.number} / {String(stacks.length).padStart(2, "0")}
+                </span>
+                <span
+                  className="text-xs font-bold tracking-widest uppercase"
+                  style={{ color: "var(--accent)", opacity: 0.8 }}
+                >
+                  {s.label}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h2
+                className="font-bold leading-tight mb-4"
+                style={{
+                  fontSize: "clamp(1.6rem, 3.8vw, 2.35rem)",
+                  color: "var(--foreground)",
+                  fontFamily: "var(--font-space-grotesk)",
+                }}
+              >
+                {s.title}
+              </h2>
+
+              {/* Divider */}
+              <div
+                className="mb-4"
+                style={{ height: 1, backgroundColor: "var(--border)" }}
+              />
+
+              {/* Description */}
+              <p
+                className="text-sm leading-relaxed mb-6"
+                style={{ color: "var(--muted)" }}
+              >
+                {s.description}
+              </p>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2">
+                {s.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs font-medium px-3 py-1.5 border"
+                    style={{
+                      borderColor: "var(--border)",
+                      color: "var(--accent)",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll hint */}
+          {i < stacks.length - 1 && (
+            <p
+              className="absolute bottom-10 text-xs"
+              style={{ color: "var(--muted)", opacity: 0.45, zIndex: 1 }}
+            >
+              Scroll ↓
+            </p>
+          )}
+        </div>
+      ))}
     </section>
   );
 }
