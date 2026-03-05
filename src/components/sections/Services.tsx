@@ -226,14 +226,14 @@ function ServiceCard({
 
       {/* ── CARD ── */}
       <div
-        className="relative w-full overflow-hidden"
+        className="relative w-full max-w-[420px] sm:max-w-[520px] xl:max-w-[640px] overflow-hidden"
         style={{
           zIndex: 1,
-          maxWidth: 520,
           background:
             "linear-gradient(135deg, #1f2937 0%, #0b1f3b 45%, #111827 100%)",
           border: "1px solid #4b5563",
-          padding: "clamp(1.75rem, 4vw, 2.75rem)",
+          padding: "clamp(2.25rem, 4.5vw, 3.25rem)",
+          minHeight: "clamp(18rem, 22rem, 26rem)",
           boxShadow: hovered
             ? "0 26px 40px rgba(15,23,42,0.65), 0 0 0 1px rgba(148,163,184,0.35)"
             : "0 18px 32px rgba(15,23,42,0.45), 0 0 0 1px rgba(148,163,184,0.2)",

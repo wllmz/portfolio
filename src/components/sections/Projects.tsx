@@ -134,7 +134,7 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
             <div className="pb-6 pt-1 pl-0 sm:pl-[56px] md:pl-[80px] lg:pl-[104px] flex flex-col gap-5">
               {/* Bloc visuel */}
               <div
-                className="w-full h-32 sm:h-40 flex items-end p-5 overflow-hidden relative"
+                className="w-full h-40 sm:h-56 lg:h-64 flex items-end p-5 overflow-hidden relative"
                 style={{ background: p.gradient }}
               >
                 <span
@@ -158,7 +158,7 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
               </div>
 
               {/* Contenu */}
-              <div className="flex flex-wrap items-end justify-between gap-4">
+              <div className="flex flex-wrap items-end justify-between gap-5 md:gap-6">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-3 sm:hidden">
                     <p
@@ -234,7 +234,7 @@ export default function Projects() {
       id="projects"
       className="relative z-10 overflow-x-hidden py-16 sm:py-24 px-4 sm:px-6"
     >
-      <div className="max-w-6xl mx-auto w-full">
+      <div className="w-full mx-auto max-w-md sm:max-w-3xl lg:max-w-6xl">
         <div ref={ref} className="mb-10 sm:mb-14">
           <motion.p
             initial={{ opacity: 0, y: 10 }}

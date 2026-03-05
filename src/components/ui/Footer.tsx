@@ -5,10 +5,20 @@ export default function Footer() {
         <p className="text-[--foreground] opacity-60 text-sm">
           © {new Date().getFullYear()} Votre Nom. Tous droits réservés.
         </p>
-        <p className="text-[--foreground] opacity-60 text-sm">
-          Fait avec <span className="text-[--accent]">Next.js</span> &{" "}
-          <span className="text-[--accent]">Tailwind CSS</span>
-        </p>
+        <div className="flex flex-col sm:flex-row items-center gap-3 text-sm">
+          <div className="flex items-center gap-3">
+            <a
+              href="/cv"
+              className="text-[--accent] font-medium hover:underline underline-offset-4"
+            >
+              Mon CV en ligne
+            </a>
+          </div>
+          <p className="text-[--foreground] opacity-60 text-xs sm:text-sm">
+            Fait avec <span className="text-[--accent]">Next.js</span> &{" "}
+            <span className="text-[--accent]">Tailwind CSS</span>
+          </p>
+        </div>
       </div>
     </footer>
   );
