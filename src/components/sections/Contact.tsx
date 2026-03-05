@@ -39,7 +39,8 @@ export default function Contact() {
               Contact
             </h2>
             <p className="text-base sm:text-lg opacity-80" style={{ color: "var(--foreground)" }}>
-              Un projet en tête&nbsp;? N&apos;hésitez pas à me contacter.
+              Besoin d&apos;un dev full stack pour un produit web, un ERP ou un
+              site sur‑mesure&nbsp;? Parlons‑en.
             </p>
           </motion.div>
 
@@ -114,9 +115,9 @@ export default function Contact() {
               className="flex justify-center gap-6 mt-8"
             >
               {[
-                { label: "GitHub",   href: "https://github.com/tonpseudo"          },
-                { label: "LinkedIn", href: "https://linkedin.com/in/tonpseudo"     },
-                { label: "Email",    href: "mailto:ton@email.com"                  },
+                { label: "GitHub",   href: "https://github.com/wllmz-dev"          },
+                { label: "LinkedIn", href: "https://linkedin.com/in/william-martinez-dev"     },
+                { label: "Email",    href: "mailto:william.martinez06500@gmail.com"                  },
               ].map((link) => (
                 <a
                   key={link.label}

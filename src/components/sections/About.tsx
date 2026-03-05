@@ -28,7 +28,6 @@ const approach = [
   },
 ];
 
-
 export default function About() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -78,28 +77,29 @@ export default function About() {
                 className="text-base sm:text-lg leading-relaxed"
                 style={{ color: "var(--foreground)" }}
               >
-                Je suis développeur freelance full stack, spécialisé dans la
-                création d&apos;applications web{" "}
+                Je suis William, développeur full stack freelance basé à Paris.
+                J&apos;aide les entreprises à transformer leurs idées en{" "}
                 <span style={{ color: "var(--accent)" }}>
-                  rapides, accessibles et mémorables.
+                  outils web concrets, utiles et bien pensés.
                 </span>
               </p>
               <p
-                className="text-sm sm:text-base leading-relaxed opacity-80"
+                className="text-sm sm:text-base leading-relaxed"
                 style={{ color: "var(--foreground)" }}
               >
-                Depuis plus de 5 ans, j&apos;accompagne des startups et des PME
-                dans la conception et le développement de leurs projets digitaux
-                — de l&apos;idée jusqu&apos;à la mise en production.
+                Mon quotidien&nbsp;: concevoir et développer des applications
+                métier (ERP, back‑offices, plateformes SaaS) avec Next.js,
+                Node.js et des bases de données modernes, du schéma Figma
+                jusqu&apos;au déploiement Docker en production.
               </p>
               <p
-                className="text-sm sm:text-base leading-relaxed opacity-80"
+                className="text-sm sm:text-base leading-relaxed"
                 style={{ color: "var(--foreground)" }}
               >
-                Ce qui me différencie&nbsp;: je pense autant en tant que
-                designer qu&apos;en tant qu&apos;ingénieur. Le code que
-                j&apos;écris est pensé pour durer, et l&apos;interface que je
-                crée est pensée pour convertir.
+                Je travaille autant sur la technique que sur l&apos;expérience
+                utilisateur&nbsp;: architecture propre, sécurité solide,
+                performances, mais aussi parcours clairs et interfaces qui
+                donnent envie d&apos;être utilisées tous les jours.
               </p>
             </div>
 
@@ -162,7 +162,6 @@ export default function About() {
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );

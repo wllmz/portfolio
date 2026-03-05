@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { useRef, useState } from "react";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -16,7 +17,8 @@ const projects = [
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma"],
     demo: "#",
     github: "#",
-    gradient: "linear-gradient(135deg, #001d6f 0%, #0043ce 100%)",
+    // gradient: "linear-gradient(135deg, #001d6f 0%, #0043ce 100%)",
+    image: "/sas.png",
   },
   {
     index: "02",
@@ -28,7 +30,8 @@ const projects = [
     tags: ["Next.js", "Stripe", "Sanity", "Tailwind"],
     demo: "#",
     github: "#",
-    gradient: "linear-gradient(135deg, #1a1a2e 0%, #c2185b 100%)",
+    // gradient: "linear-gradient(135deg, #1a1a2e 0%, #c2185b 100%)",
+    image: "/freia.png",
   },
   {
     index: "03",
@@ -133,27 +136,51 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
           >
             <div className="pb-6 pt-1 pl-0 sm:pl-[56px] md:pl-[80px] lg:pl-[104px] flex flex-col gap-5">
               {/* Bloc visuel */}
-              <div
-                className="w-full h-40 sm:h-56 lg:h-64 flex items-end p-5 overflow-hidden relative"
-                style={{ background: p.gradient }}
-              >
-                <span
-                  className="absolute top-4 right-5 text-[clamp(3rem,10vw,6rem)] font-bold leading-none select-none pointer-events-none"
-                  style={{
-                    color: "rgba(255,255,255,0.08)",
-                    fontFamily: "var(--font-space-grotesk)",
-                  }}
-                >
-                  {p.index}
-                </span>
-                <div>
-                  <p className="text-white/60 text-xs font-medium mb-1">{p.category}</p>
-                  <p
-                    className="text-white font-bold text-lg sm:text-xl leading-tight"
-                    style={{ fontFamily: "var(--font-space-grotesk)" }}
+              <div className="w-full h-52 sm:h-64 lg:h-72 overflow-hidden relative rounded-sm">
+                {p.image ? (
+                  <>
+                    <Image
+                      src={p.image}
+                      alt={p.title}
+                      fill
+                      className="object-cover object-[center_top]"
+                      sizes="(min-width: 1024px) 960px, 100vw"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      // style={{
+                      //   background:
+                      //     "linear-gradient(to top, rgba(0,29,111,0.82), rgba(0,29,111,0.45), rgba(0,29,111,0.08))",
+                      // }}
+                    />
+                  </>
+                ) : (
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: p.gradient }}
+                  />
+                )}
+                <div className="relative z-10 flex h-full items-end p-5">
+                  <span
+                    className="absolute top-4 right-5 text-[clamp(3rem,10vw,6rem)] font-bold leading-none select-none pointer-events-none"
+                    style={{
+                      color: "rgba(255,255,255,0.12)",
+                      fontFamily: "var(--font-space-grotesk)",
+                    }}
                   >
-                    {p.title}
-                  </p>
+                    {p.index}
+                  </span>
+                  <div>
+                    <p className="text-white/70 text-xs font-medium mb-1">
+                      {p.category}
+                    </p>
+                    <p
+                      className="text-white font-bold text-lg sm:text-xl leading-tight"
+                      style={{ fontFamily: "var(--font-space-grotesk)" }}
+                    >
+                      {p.title}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -170,7 +197,10 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
                     >
                       {p.impact.value}
                     </p>
-                    <p className="text-xs opacity-60" style={{ color: "var(--foreground)" }}>
+                    <p
+                      className="text-xs opacity-60"
+                      style={{ color: "var(--foreground)" }}
+                    >
                       {p.impact.label}
                     </p>
                   </div>
@@ -202,18 +232,7 @@ function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
                     className="text-xs font-semibold px-4 py-2 transition-opacity duration-200 hover:opacity-80"
                     style={{ backgroundColor: "var(--accent)", color: "#fff" }}
                   >
-                    Voir ↗
-                  </a>
-                  <a
-                    href={p.github}
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-xs font-semibold px-4 py-2 border transition-opacity duration-200 hover:opacity-80"
-                    style={{
-                      borderColor: "var(--border)",
-                      color: "var(--foreground)",
-                    }}
-                  >
-                    Code
+                    Voir
                   </a>
                 </div>
               </div>
