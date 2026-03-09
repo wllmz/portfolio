@@ -155,8 +155,8 @@ const backdropTransition = {
 };
 const modalZoomTransition = {
   type: "spring" as const,
-  stiffness: 400,
-  damping: 35,
+  stiffness: 150,
+  damping: 25,
 };
 
 /** Laptop mockup — taille agrandie pour la popup */
@@ -316,9 +316,9 @@ function ProjectModal({
           <motion.div
             className="relative z-10 w-full max-w-5xl max-h-[90vh] overflow-y-auto overflow-x-hidden flex flex-col bg-white p-4 sm:p-6 lg:p-8 rounded-2xl"
             onClick={(e) => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.75 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.92 }}
+            exit={{ opacity: 0, scale: 0.9 }}
             transition={modalZoomTransition}
           >
             <button

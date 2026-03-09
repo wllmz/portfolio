@@ -9,31 +9,82 @@ const approach = [
   {
     num: "01",
     title: "Comprendre avant de coder",
-    desc: "Je prends le temps d'analyser le besoin métier avant d'écrire la première ligne. Un bon produit commence par les bonnes questions.",
+    desc: "Analyser le besoin métier avant d'écrire la première ligne.",
   },
   {
     num: "02",
     title: "Design & technique, ensemble",
-    desc: "Je travaille l'interface et l'architecture en parallèle. L'expérience utilisateur n'est pas un détail — c'est le produit.",
+    desc: "Interface et architecture en parallèle. L'UX n'est pas un détail.",
   },
   {
     num: "03",
     title: "Livrer, itérer, améliorer",
-    desc: "Je livre vite des versions fonctionnelles, j'intègre vos retours et j'améliore en continu. Pas de big bang, pas de surprise.",
+    desc: "Versions fonctionnelles vite, retours intégrés, amélioration continue.",
   },
   {
     num: "04",
     title: "Transparence totale",
-    desc: "Avancement, blocages, décisions techniques — vous êtes informé à chaque étape. La confiance se construit dans la clarté.",
+    desc: "Avancement, blocages, décisions — vous êtes informé à chaque étape.",
   },
 ];
+
+function ApproachCard({
+  item,
+  index,
+  inView,
+}: {
+  item: (typeof approach)[0];
+  index: number;
+  inView: boolean;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+      transition={{
+        duration: 0.65,
+        ease: EASE,
+        delay: 0.15 + index * 0.08,
+      }}
+      className="p-5 sm:p-6 flex flex-col gap-3 border transition-colors duration-200"
+      style={{
+        backgroundColor: "var(--surface)",
+        borderColor: "var(--border)",
+      }}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--card)")}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--surface)")}
+    >
+      <span
+        className="text-xs font-bold tracking-widest"
+        style={{ color: "var(--accent)" }}
+      >
+        {item.num}
+      </span>
+      <h3
+        className="text-sm font-bold leading-snug"
+        style={{
+          color: "var(--foreground)",
+          fontFamily: "var(--font-space-grotesk)",
+        }}
+      >
+        {item.title}
+      </h3>
+      <p
+        className="text-xs leading-relaxed"
+        style={{ color: "var(--foreground)" }}
+      >
+        {item.desc}
+      </p>
+    </motion.div>
+  );
+}
 
 export default function About() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <section id="about" className="relative z-10 py-20 sm:py-28 px-4 sm:px-6">
+    <section id="about" className="relative z-10 py-16 sm:py-20 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto w-full">
         <div ref={ref} className="mb-12 sm:mb-16 text-center sm:text-left">
           <motion.p
@@ -65,14 +116,14 @@ export default function About() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_1.4fr] gap-10 lg:gap-16 mb-12 sm:mb-20">
+        <div className="grid lg:grid-cols-[1fr_1.4fr] gap-10 lg:gap-16 mb-8 sm:mb-12">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
             transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
             className="flex flex-col justify-between gap-6 sm:gap-8 text-left"
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               <p
                 className="text-base sm:text-lg leading-relaxed"
                 style={{ color: "var(--foreground)" }}
@@ -80,26 +131,15 @@ export default function About() {
                 Je suis William, développeur full stack freelance basé à Paris.
                 J&apos;aide les entreprises à transformer leurs idées en{" "}
                 <span style={{ color: "var(--accent)" }}>
-                  outils web concrets, utiles et bien pensés.
+                  outils web concrets et bien pensés.
                 </span>
               </p>
               <p
-                className="text-sm sm:text-base leading-relaxed"
+                className="text-sm leading-relaxed"
                 style={{ color: "var(--foreground)" }}
               >
-                Mon quotidien&nbsp;: concevoir et développer des applications
-                métier (ERP, back‑offices, plateformes SaaS) avec Next.js,
-                Node.js et des bases de données modernes, du schéma Figma
-                jusqu&apos;au déploiement Docker en production.
-              </p>
-              <p
-                className="text-sm sm:text-base leading-relaxed"
-                style={{ color: "var(--foreground)" }}
-              >
-                Je travaille autant sur la technique que sur l&apos;expérience
-                utilisateur&nbsp;: architecture propre, sécurité solide,
-                performances, mais aussi parcours clairs et interfaces qui
-                donnent envie d&apos;être utilisées tous les jours.
+                Applications métier (ERP, SaaS) avec Next.js et Node.js, du
+                Figma au déploiement. Technique et UX au même niveau.
               </p>
             </div>
 
@@ -115,50 +155,9 @@ export default function About() {
             </motion.a>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px border border-[--border] overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             {approach.map((item, i) => (
-              <motion.div
-                key={item.num}
-                initial={{ opacity: 0, y: 16 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-                transition={{
-                  duration: 0.65,
-                  ease: EASE,
-                  delay: 0.15 + i * 0.08,
-                }}
-                className="p-5 sm:p-6 flex flex-col gap-3 transition-colors duration-300"
-                style={{ backgroundColor: "var(--surface)" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor =
-                    "var(--card)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor =
-                    "var(--surface)";
-                }}
-              >
-                <span
-                  className="text-xs font-bold tracking-widest"
-                  style={{ color: "var(--accent)" }}
-                >
-                  {item.num}
-                </span>
-                <h3
-                  className="text-sm font-bold leading-snug"
-                  style={{
-                    color: "var(--foreground)",
-                    fontFamily: "var(--font-space-grotesk)",
-                  }}
-                >
-                  {item.title}
-                </h3>
-                <p
-                  className="text-xs leading-relaxed opacity-80"
-                  style={{ color: "var(--foreground)" }}
-                >
-                  {item.desc}
-                </p>
-              </motion.div>
+              <ApproachCard key={item.num} item={item} index={i} inView={inView} />
             ))}
           </div>
         </div>
