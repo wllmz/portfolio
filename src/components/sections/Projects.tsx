@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Project = {
@@ -64,84 +64,105 @@ const projects: Project[] = [
   },
 ];
 
-const cardClassName =
-  "bento-card group relative block h-full min-h-[220px] lg:min-h-[280px] p-3 sm:p-4 rounded-lg transition-all duration-200 hover:shadow-xl hover:ring-2 hover:ring-white/50 active:scale-[0.97] active:ring-2 active:ring-white/80 cursor-pointer w-full text-left";
-const cardStyle = {
-  backgroundColor: "var(--surface)",
-};
-
-/** Carte image avec titre — ouvre la modale au clic */
-function ProjectImageCard({
+/** Timeline horizontale — un projet = un bloc avec année, titre, description */
+function TimelineCard({
   project,
   onClick,
-  className = "",
 }: {
   project: Project;
-  onClick: (e: React.MouseEvent) => void;
-  className?: string;
+  onClick: () => void;
 }) {
-  const content = (
-    <>
-      <div className="relative h-full min-h-[180px] w-full overflow-hidden">
-        {project.image ? (
-          <Image
-            src={project.image}
-            alt={project.title}
-            fill
-            className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-            sizes="(min-width: 1024px) 600px, 100vw"
-          />
-        ) : (
-          <div
-            className="absolute inset-0"
-            style={{ background: project.gradient }}
-          />
-        )}
-        <div
-          className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)",
-          }}
-        >
-          <h3
-            className="text-base sm:text-lg font-bold"
-            style={{
-              fontFamily: "var(--font-space-grotesk)",
-              color: "white",
-            }}
-          >
-            {project.title}
-          </h3>
-        </div>
-      </div>
-    </>
-  );
-
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`${cardClassName} ${className}`}
-      style={cardStyle}
+      className="group flex-shrink-0 w-[280px] sm:w-[340px] text-left border-0 bg-transparent p-0 outline-none cursor-pointer"
     >
-      {content}
+      <div className="flex flex-col gap-4 relative pt-2">
+        {/* Point sur la ligne (la ligne est dans le parent) */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full flex-shrink-0 transition-transform group-hover:scale-125 z-10"
+          style={{ backgroundColor: "var(--accent)" }}
+        />
+
+        {/* Année */}
+        <span
+          className="text-xs font-bold tracking-widest"
+          style={{ color: "var(--accent)" }}
+        >
+          {project.year}
+        </span>
+
+        {/* Image miniature */}
+        <div className="relative w-full aspect-video overflow-hidden rounded-lg">
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+              sizes="340px"
+            />
+          ) : (
+            <div
+              className="absolute inset-0"
+              style={{ background: project.gradient }}
+            />
+          )}
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)",
+            }}
+          />
+        </div>
+
+        {/* Texte */}
+        <div>
+          <h3
+            className="text-lg font-bold mb-1"
+            style={{
+              fontFamily: "var(--font-space-grotesk)",
+              color: "var(--foreground)",
+            }}
+          >
+            {project.title}
+          </h3>
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            {project.meta}
+          </p>
+          {project.impact && (
+            <p
+              className="text-sm font-semibold mt-2"
+              style={{ color: "var(--accent)" }}
+            >
+              {project.impact}
+            </p>
+          )}
+        </div>
+      </div>
     </button>
   );
 }
 
-const modalTransition = {
-  duration: 0.4,
+const backdropTransition = {
+  duration: 0.35,
   ease: [0.25, 0.46, 0.45, 0.94] as const,
 };
+const modalZoomTransition = {
+  type: "spring" as const,
+  stiffness: 400,
+  damping: 35,
+};
 
-/** Laptop mockup — style Mike Matas / Lobe */
+/** Laptop mockup */
 function LaptopMockup({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="laptop-mockup relative w-full max-w-md mx-auto"
+      className="laptop-mockup relative w-full max-w-[280px] sm:max-w-[340px] mx-auto"
       style={{
-        padding: "20px 20px 28px",
+        padding: "12px 12px 18px",
         background: "linear-gradient(145deg, #e8e8e8 0%, #d0d0d0 100%)",
         boxShadow: "0 20px 40px -12px rgba(0,0,0,0.15)",
       }}
@@ -163,7 +184,7 @@ function LaptopMockup({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Modal overlay pour tous les projets — style Lobe / Mike Matas */
+/** Modal projet — fond blanc, zoom, laptop mockup */
 function ProjectModal({
   isOpen,
   onClose,
@@ -180,65 +201,43 @@ function ProjectModal({
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-white"
           onClick={onClose}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={modalTransition}
+          transition={backdropTransition}
         >
           <motion.div
-            className="absolute inset-0 bg-white"
-            aria-hidden="true"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={modalTransition}
-          />
-          <motion.div
-            className="relative z-10 w-full max-w-5xl max-h-[90vh] overflow-auto bg-white p-8 sm:p-12"
+            className="relative z-10 w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col bg-white p-6 sm:p-8 rounded-2xl"
             onClick={(e) => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.995 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.995 }}
-            transition={modalTransition}
+            exit={{ opacity: 0, scale: 0.92 }}
+            transition={modalZoomTransition}
           >
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center text-2xl font-light hover:opacity-70 transition-opacity"
-              style={{ color: "#9ca3af" }}
+              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700"
               aria-label="Fermer"
             >
-              ×
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
             </button>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-              {/* Colonne gauche — texte style Lobe */}
-              <div className="lg:col-span-5 space-y-6">
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={onClose}
-                    className="text-[#9ca3af] hover:text-[#6b7280] transition-colors"
-                    aria-label="Retour"
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <span
-                    className="w-2 h-2 block"
-                    style={{ backgroundColor: "#d1d5db" }}
-                  />
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 overflow-hidden pt-2">
+              <div className="lg:col-span-5 space-y-3 flex-shrink-0">
                 <h2
-                  className="text-3xl sm:text-4xl font-bold"
+                  className="text-xl sm:text-2xl font-bold"
                   style={{
                     fontFamily: "var(--font-space-grotesk)",
                     color: "#111827",
@@ -259,8 +258,8 @@ function ProjectModal({
                     {project.impact}
                   </p>
                 )}
-                <div className="pt-4 border-t border-[#e5e7eb]">
-                  <p className="text-xs mb-3" style={{ color: "#9ca3af" }}>
+                <div className="pt-2 border-t border-[#e5e7eb]">
+                  <p className="text-xs mb-1.5" style={{ color: "#9ca3af" }}>
                     Stack technique
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -277,8 +276,7 @@ function ProjectModal({
                 </div>
               </div>
 
-              {/* Colonne droite — laptop mockup */}
-              <div className="lg:col-span-7">
+              <div className="lg:col-span-7 flex items-center justify-center flex-shrink-0">
                 <LaptopMockup>
                   {project.image ? (
                     <Image
@@ -307,13 +305,24 @@ function ProjectModal({
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedProject]);
+
   return (
     <section
       id="projects"
       className="relative z-10 py-20 sm:py-28 px-4 sm:px-6"
     >
       <div className="w-full mx-auto max-w-6xl">
-        <div className="mb-12 sm:mb-16 p-6">
+        <div className="mb-12">
           <p
             className="text-xs font-bold tracking-[0.2em] uppercase mb-2"
             style={{ color: "var(--accent)" }}
@@ -333,7 +342,7 @@ export default function Projects() {
             className="mt-2 text-sm max-w-lg"
             style={{ color: "var(--muted)" }}
           >
-            Pas des maquettes. Des trucs en prod.
+            Chronologie de mes réalisations.
           </p>
         </div>
 
@@ -343,42 +352,30 @@ export default function Projects() {
           project={selectedProject}
         />
 
-        <div className="flex flex-col gap-4 sm:gap-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
-            <div className="lg:col-span-4">
-              <ProjectImageCard
-                project={projects[0]}
-                onClick={() => setSelectedProject(projects[0])}
+        <div className="overflow-x-auto projects-carousel -mx-4 px-4">
+          <div className="relative flex gap-12 sm:gap-16 min-w-max py-8">
+            {/* Ligne continue de la timeline */}
+            <div
+              className="absolute top-2 left-0 right-0 h-px min-w-full"
+              style={{ backgroundColor: "var(--muted)", opacity: 0.5 }}
+            />
+            {projects.map((project) => (
+              <TimelineCard
+                key={project.id}
+                project={project}
+                onClick={() => setSelectedProject(project)}
               />
-            </div>
-            <div className="lg:col-span-8">
-              <ProjectImageCard
-                project={projects[1]}
-                onClick={() => setSelectedProject(projects[1])}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
-            <div className="lg:col-span-4">
-              <ProjectImageCard
-                project={projects[2]}
-                onClick={() => setSelectedProject(projects[2])}
-              />
-            </div>
-            <div className="lg:col-span-8">
-              <ProjectImageCard
-                project={projects[3]}
-                onClick={() => setSelectedProject(projects[3])}
-              />
-            </div>
+            ))}
           </div>
         </div>
 
-        <p className="mt-12 text-sm" style={{ color: "var(--foreground)" }}>
-          <a href="#contact" className="hover:opacity-70 transition-opacity">
-            Votre projet pourrait être le prochain →
-          </a>
-        </p>
+        <div className="mt-12">
+          <p className="text-sm" style={{ color: "var(--foreground)" }}>
+            <a href="#contact" className="hover:opacity-70 transition-opacity">
+              Votre projet pourrait être le prochain →
+            </a>
+          </p>
+        </div>
       </div>
     </section>
   );

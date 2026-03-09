@@ -48,7 +48,21 @@ section {
 }
 
 /* Carousel projets — cache la scrollbar */
+.projects-carousel {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
 .projects-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Modal — cache la scrollbar */
+.modal-no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.modal-no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
