@@ -1,10 +1,12 @@
 "use client";
 
+import { label } from "framer-motion/client";
 import { useEffect, useRef, useState } from "react";
 
 const services = [
   {
     number: "01",
+    label: "WEB",
     title: "Applications Web",
     description:
       "Du site vitrine à l'application SaaS complète. Je conçois et développe des interfaces rapides, accessibles et mémorables avec React et Next.js.",
@@ -29,10 +31,11 @@ const services = [
   },
   {
     number: "02",
+    label: "API",
     title: "API & Backend",
     description:
       "Des architectures solides et scalables. Bases de données relationnelles, API REST ou GraphQL, authentication — tout ce qui fait tourner votre produit.",
-    tags: ["Node.js", "PostgreSQL", "Prisma", "GraphQL"],
+    tags: ["Node.js", "PostgreSQL", "MongoDB", "GraphQL"],
     icon: (
       <svg
         width="28"
@@ -53,10 +56,11 @@ const services = [
   },
   {
     number: "03",
+    label: "SEO",
     title: "Performance & SEO",
     description:
       "Un site lent fait fuir vos clients. J'optimise les Core Web Vitals, le SEO technique et l'accessibilité pour que votre produit performe vraiment.",
-    tags: ["Lighthouse", "SEO", "A11y", "Core Web Vitals"],
+    tags: ["Lighthouse", "SEO", "Core Web Vitals"],
     icon: (
       <svg
         width="28"
@@ -212,7 +216,7 @@ function ServiceCard({
             fontFamily: "var(--font-space-grotesk)",
           }}
         >
-          {s.number}
+          {s.label}
         </span>
       </div>
 

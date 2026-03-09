@@ -1,305 +1,384 @@
 "use client";
 
-import { motion, useInView, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+type Project = {
+  id: string;
+  title: string;
+  href: string;
+  image?: string;
+  gradient?: string;
+  role?: string;
+  meta?: string;
+  year?: string;
+  impact?: string;
+  stack?: string[];
+};
 
-const projects = [
+const projects: Project[] = [
   {
-    index: "01",
-    title: "Plateforme SaaS",
-    category: "Application Web · Full Stack",
-    description:
-      "Outil de gestion interne pour une PME de 50 personnes. Dashboard en temps réel, gestion des rôles, exports CSV automatisés.",
-    impact: { value: "↓ 3h", label: "gagnées / jour / équipe" },
-    tags: ["Next.js", "TypeScript", "PostgreSQL", "Prisma"],
-    demo: "#",
-    github: "#",
-    // gradient: "linear-gradient(135deg, #001d6f 0%, #0043ce 100%)",
-    image: "/sas.png",
-  },
-  {
-    index: "02",
-    title: "E-commerce Mode",
-    category: "Boutique en ligne · Paiement",
-    description:
-      "Boutique e-commerce sur-mesure avec tunnel de paiement optimisé, gestion des stocks et programme fidélité.",
-    impact: { value: "+42%", label: "taux de conversion" },
-    tags: ["Next.js", "Stripe", "Sanity", "Tailwind"],
-    demo: "#",
-    github: "#",
-    // gradient: "linear-gradient(135deg, #1a1a2e 0%, #c2185b 100%)",
-    image: "/freia.png",
-  },
-  {
-    index: "03",
+    id: "api",
     title: "API Logistique",
-    category: "Backend · Architecture",
-    description:
-      "Refonte complète de l'API d'une startup logistique. Migration GraphQL, cache Redis, réduction des temps de réponse de 80%.",
-    impact: { value: "↓ 80%", label: "temps de réponse API" },
-    tags: ["Node.js", "GraphQL", "Redis", "Docker"],
-    demo: "#",
-    github: "#",
-    gradient: "linear-gradient(135deg, #0d3b2e 0%, #00897b 100%)",
+    href: "#",
+    gradient: "linear-gradient(135deg, #0d3b2e 0%, #00897b 60%, #004d40 100%)",
+    role: "Backend",
+    meta: "Refonte complète",
+    year: "2024",
+    impact: "−80% temps de réponse API",
+    stack: ["Node.js", "PostgreSQL", "GraphQL", "TypeScript"],
+  },
+  {
+    id: "alcma",
+    title: "Alcma",
+    href: "/alcma",
+    image: "/sas.png",
+    role: "Plateforme SaaS",
+    meta: "Application de gestion interne",
+    year: "2024",
+    impact: "−3h gagnées par jour par équipe",
+    stack: ["React", "Next.js", "Node.js", "PostgreSQL", "TypeScript"],
+  },
+  {
+    id: "portfolio",
+    title: "Portfolio",
+    href: "#",
+    gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+    role: "Site vitrine",
+    meta: "Développement web",
+    year: "2024",
+    impact: "100% sur mesure",
+    stack: ["Next.js", "React", "Tailwind", "Framer Motion"],
+  },
+  {
+    id: "freia",
+    title: "Freïa",
+    href: "/freia",
+    image: "/freia.png",
+    role: "E-commerce",
+    meta: "Boutique en ligne mode",
+    year: "2024",
+    impact: "+42% taux de conversion",
+    stack: ["Next.js", "Stripe", "PostgreSQL", "TypeScript"],
   },
 ];
 
-function ProjectRow({ p, i }: { p: (typeof projects)[0]; i: number }) {
-  const [hovered, setHovered] = useState(false);
-  const [tapped, setTapped] = useState(false);
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-40px" });
+const cardClassName =
+  "bento-card group relative block h-full min-h-[220px] lg:min-h-[280px] p-3 sm:p-4 rounded-lg transition-all duration-200 hover:shadow-xl hover:ring-2 hover:ring-white/50 active:scale-[0.97] active:ring-2 active:ring-white/80 cursor-pointer w-full text-left";
+const cardStyle = {
+  backgroundColor: "var(--surface)",
+};
 
-  const expanded = hovered || tapped;
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-      transition={{ duration: 0.7, ease: EASE, delay: i * 0.1 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={() => setTapped((v) => !v)}
-      className="border-t border-[--border] cursor-default select-none"
-    >
-      <div className="py-5 sm:py-6 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 md:gap-10">
-        <span
-          className="text-[clamp(2.5rem,7vw,4.5rem)] font-bold leading-none tabular-nums select-none transition-colors duration-300 flex-shrink-0"
+/** Carte image avec titre — ouvre la modale au clic */
+function ProjectImageCard({
+  project,
+  onClick,
+  className = "",
+}: {
+  project: Project;
+  onClick: (e: React.MouseEvent) => void;
+  className?: string;
+}) {
+  const content = (
+    <>
+      <div className="relative h-full min-h-[180px] w-full overflow-hidden">
+        {project.image ? (
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+            sizes="(min-width: 1024px) 600px, 100vw"
+          />
+        ) : (
+          <div
+            className="absolute inset-0"
+            style={{ background: project.gradient }}
+          />
+        )}
+        <div
+          className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5"
           style={{
-            fontFamily: "var(--font-space-grotesk)",
-            color: expanded ? "var(--accent)" : "var(--foreground)",
-            opacity: expanded ? 1 : 0.25,
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%)",
           }}
         >
-          {p.index}
-        </span>
-
-        <div className="flex-1 min-w-0">
           <h3
-            className="text-[clamp(1.1rem,2.5vw,1.875rem)] font-bold leading-tight transition-colors duration-200"
+            className="text-base sm:text-lg font-bold"
             style={{
               fontFamily: "var(--font-space-grotesk)",
-              color: expanded ? "var(--accent)" : "var(--foreground)",
+              color: "white",
             }}
           >
-            {p.title}
+            {project.title}
           </h3>
-          <p
-            className="text-xs sm:text-sm mt-1 opacity-60"
-            style={{ color: "var(--foreground)" }}
-          >
-            {p.category}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 xs:gap-4 sm:gap-6 lg:gap-8 flex-shrink-0 self-end xs:self-auto">
-          <div className="hidden sm:block text-right">
-            <p
-              className="text-base sm:text-xl font-bold leading-none"
-              style={{
-                color: "var(--accent)",
-                fontFamily: "var(--font-space-grotesk)",
-              }}
-            >
-              {p.impact.value}
-            </p>
-            <p
-              className="text-xs mt-0.5 opacity-60"
-              style={{ color: "var(--foreground)" }}
-            >
-              {p.impact.label}
-            </p>
-          </div>
-          <motion.span
-            animate={{ x: expanded ? 5 : 0 }}
-            transition={{ duration: 0.25, ease: EASE }}
-            className="text-xl transition-colors duration-200"
-            style={{ color: expanded ? "var(--accent)" : "var(--foreground)" }}
-          >
-            →
-          </motion.span>
         </div>
       </div>
+    </>
+  );
 
-      <AnimatePresence>
-        {expanded && (
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`${cardClassName} ${className}`}
+      style={cardStyle}
+    >
+      {content}
+    </button>
+  );
+}
+
+const modalTransition = {
+  duration: 0.4,
+  ease: [0.25, 0.46, 0.45, 0.94] as const,
+};
+
+/** Laptop mockup — style Mike Matas / Lobe */
+function LaptopMockup({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="laptop-mockup relative w-full max-w-md mx-auto"
+      style={{
+        padding: "20px 20px 28px",
+        background: "linear-gradient(145deg, #e8e8e8 0%, #d0d0d0 100%)",
+        boxShadow: "0 20px 40px -12px rgba(0,0,0,0.15)",
+      }}
+    >
+      <div
+        className="relative overflow-hidden bg-[#1a1a1a] w-full"
+        style={{ aspectRatio: "16/10", borderRadius: "6px" }}
+      >
+        {children}
+      </div>
+      <div
+        className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-2 w-[70%]"
+        style={{
+          background: "linear-gradient(180deg, #c8c8c8 0%, #a0a0a0 100%)",
+          borderRadius: "0 0 4px 4px",
+        }}
+      />
+    </div>
+  );
+}
+
+/** Modal overlay pour tous les projets — style Lobe / Mike Matas */
+function ProjectModal({
+  isOpen,
+  onClose,
+  project,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  project: Project | null;
+}) {
+  if (!project) return null;
+  const team = project.stack ?? ["React", "Next.js", "Node.js", "TypeScript"];
+
+  return (
+    <AnimatePresence mode="wait">
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8"
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={modalTransition}
+        >
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: EASE }}
-            className="overflow-hidden"
+            className="absolute inset-0 bg-white"
+            aria-hidden="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={modalTransition}
+          />
+          <motion.div
+            className="relative z-10 w-full max-w-5xl max-h-[90vh] overflow-auto bg-white p-8 sm:p-12"
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, scale: 0.995 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.995 }}
+            transition={modalTransition}
           >
-            <div className="pb-6 pt-1 pl-0 sm:pl-[56px] md:pl-[80px] lg:pl-[104px] flex flex-col gap-5">
-              {/* Bloc visuel */}
-              <div className="w-full h-52 sm:h-64 lg:h-72 overflow-hidden relative rounded-sm">
-                {p.image ? (
-                  <>
-                    <Image
-                      src={p.image}
-                      alt={p.title}
-                      fill
-                      className="object-cover object-[center_top]"
-                      sizes="(min-width: 1024px) 960px, 100vw"
-                    />
-                    <div
-                      className="absolute inset-0"
-                      // style={{
-                      //   background:
-                      //     "linear-gradient(to top, rgba(0,29,111,0.82), rgba(0,29,111,0.45), rgba(0,29,111,0.08))",
-                      // }}
-                    />
-                  </>
-                ) : (
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: p.gradient }}
-                  />
-                )}
-                <div className="relative z-10 flex h-full items-end p-5">
-                  <span
-                    className="absolute top-4 right-5 text-[clamp(3rem,10vw,6rem)] font-bold leading-none select-none pointer-events-none"
-                    style={{
-                      color: "rgba(255,255,255,0.12)",
-                      fontFamily: "var(--font-space-grotesk)",
-                    }}
-                  >
-                    {p.index}
-                  </span>
-                  <div>
-                    <p className="text-white/70 text-xs font-medium mb-1">
-                      {p.category}
-                    </p>
-                    <p
-                      className="text-white font-bold text-lg sm:text-xl leading-tight"
-                      style={{ fontFamily: "var(--font-space-grotesk)" }}
-                    >
-                      {p.title}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <button
+              onClick={onClose}
+              className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center text-2xl font-light hover:opacity-70 transition-opacity"
+              style={{ color: "#9ca3af" }}
+              aria-label="Fermer"
+            >
+              ×
+            </button>
 
-              {/* Contenu */}
-              <div className="flex flex-wrap items-end justify-between gap-5 md:gap-6">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-3 sm:hidden">
-                    <p
-                      className="text-lg font-bold leading-none"
-                      style={{
-                        color: "var(--accent)",
-                        fontFamily: "var(--font-space-grotesk)",
-                      }}
-                    >
-                      {p.impact.value}
-                    </p>
-                    <p
-                      className="text-xs opacity-60"
-                      style={{ color: "var(--foreground)" }}
-                    >
-                      {p.impact.label}
-                    </p>
-                  </div>
-                  <p
-                    className="text-sm leading-relaxed max-w-lg"
-                    style={{ color: "var(--foreground)" }}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+              {/* Colonne gauche — texte style Lobe */}
+              <div className="lg:col-span-5 space-y-6">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={onClose}
+                    className="text-[#9ca3af] hover:text-[#6b7280] transition-colors"
+                    aria-label="Retour"
                   >
-                    {p.description}
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <span
+                    className="w-2 h-2 block"
+                    style={{ backgroundColor: "#d1d5db" }}
+                  />
+                </div>
+                <h2
+                  className="text-3xl sm:text-4xl font-bold"
+                  style={{
+                    fontFamily: "var(--font-space-grotesk)",
+                    color: "#111827",
+                  }}
+                >
+                  {project.title}
+                </h2>
+                <div className="space-y-1 text-sm" style={{ color: "#6b7280" }}>
+                  {project.role && <p>{project.role}</p>}
+                  {project.meta && <p>{project.meta}</p>}
+                  {project.year && <p>{project.year}</p>}
+                </div>
+                {project.impact && (
+                  <p
+                    className="text-base font-semibold"
+                    style={{ color: "var(--accent)" }}
+                  >
+                    {project.impact}
                   </p>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {p.tags.map((tag) => (
+                )}
+                <div className="pt-4 border-t border-[#e5e7eb]">
+                  <p className="text-xs mb-3" style={{ color: "#9ca3af" }}>
+                    Stack technique
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {team.map((tech) => (
                       <span
-                        key={tag}
-                        className="text-xs font-medium px-2.5 py-1 border"
-                        style={{
-                          borderColor: "var(--border)",
-                          color: "var(--foreground)",
-                        }}
+                        key={tech}
+                        className="text-xs px-2 py-1"
+                        style={{ color: "#6b7280", backgroundColor: "#f3f4f6" }}
                       >
-                        {tag}
+                        {tech}
                       </span>
                     ))}
                   </div>
                 </div>
-                <div className="flex gap-2 flex-shrink-0">
-                  <a
-                    href={p.demo}
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-xs font-semibold px-4 py-2 transition-opacity duration-200 hover:opacity-80"
-                    style={{ backgroundColor: "var(--accent)", color: "#fff" }}
-                  >
-                    Voir
-                  </a>
-                </div>
+              </div>
+
+              {/* Colonne droite — laptop mockup */}
+              <div className="lg:col-span-7">
+                <LaptopMockup>
+                  {project.image ? (
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(min-width: 1024px) 700px, 100vw"
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0"
+                      style={{ background: project.gradient }}
+                    />
+                  )}
+                </LaptopMockup>
               </div>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
 export default function Projects() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-40px" });
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
     <section
       id="projects"
-      className="relative z-10 overflow-x-hidden py-16 sm:py-24 px-4 sm:px-6"
+      className="relative z-10 py-20 sm:py-28 px-4 sm:px-6"
     >
-      <div className="w-full mx-auto max-w-md sm:max-w-3xl lg:max-w-6xl">
-        <div ref={ref} className="mb-10 sm:mb-14">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ duration: 0.6, ease: EASE }}
-            className="text-xs font-bold tracking-widest uppercase mb-3 text-center sm:text-left"
+      <div className="w-full mx-auto max-w-6xl">
+        <div className="mb-12 sm:mb-16 p-6">
+          <p
+            className="text-xs font-bold tracking-[0.2em] uppercase mb-2"
             style={{ color: "var(--accent)" }}
           >
             Réalisations
-          </motion.p>
-          <div className="overflow-hidden">
-            <motion.h2
-              initial={{ clipPath: "inset(100% 0 0 0)", y: 12 }}
-              animate={
-                inView
-                  ? { clipPath: "inset(0% 0 0 0)", y: 0 }
-                  : { clipPath: "inset(100% 0 0 0)", y: 12 }
-              }
-              transition={{ duration: 0.9, ease: EASE }}
-              className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold tracking-tight text-center sm:text-left"
-              style={{
-                color: "var(--foreground)",
-                fontFamily: "var(--font-space-grotesk)",
-              }}
-            >
-              Projets
-            </motion.h2>
-          </div>
-          <motion.a
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-            href="#contact"
-            className="text-sm mt-3 inline-block hover:text-[--accent] transition-colors text-center sm:text-left"
-            style={{ color: "var(--foreground)" }}
+          </p>
+          <h2
+            className="text-[clamp(2rem,5vw,3rem)] font-bold tracking-tight"
+            style={{
+              color: "var(--foreground)",
+              fontFamily: "var(--font-space-grotesk)",
+            }}
           >
-            Votre projet pourrait être le prochain →
-          </motion.a>
+            Projets
+          </h2>
+          <p
+            className="mt-2 text-sm max-w-lg"
+            style={{ color: "var(--muted)" }}
+          >
+            Pas des maquettes. Des trucs en prod.
+          </p>
         </div>
 
-        <div>
-          {projects.map((p, i) => (
-            <ProjectRow key={p.index} p={p} i={i} />
-          ))}
-          <div className="border-t border-[--border]" />
+        <ProjectModal
+          isOpen={selectedProject !== null}
+          onClose={() => setSelectedProject(null)}
+          project={selectedProject}
+        />
+
+        <div className="flex flex-col gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
+            <div className="lg:col-span-4">
+              <ProjectImageCard
+                project={projects[0]}
+                onClick={() => setSelectedProject(projects[0])}
+              />
+            </div>
+            <div className="lg:col-span-8">
+              <ProjectImageCard
+                project={projects[1]}
+                onClick={() => setSelectedProject(projects[1])}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
+            <div className="lg:col-span-4">
+              <ProjectImageCard
+                project={projects[2]}
+                onClick={() => setSelectedProject(projects[2])}
+              />
+            </div>
+            <div className="lg:col-span-8">
+              <ProjectImageCard
+                project={projects[3]}
+                onClick={() => setSelectedProject(projects[3])}
+              />
+            </div>
+          </div>
         </div>
+
+        <p className="mt-12 text-sm" style={{ color: "var(--foreground)" }}>
+          <a href="#contact" className="hover:opacity-70 transition-opacity">
+            Votre projet pourrait être le prochain →
+          </a>
+        </p>
       </div>
     </section>
   );

@@ -39,6 +39,24 @@ section {
   border-radius: 0 !important;
 }
 
+/* Exception pour les mockups laptop (style Mike Matas) */
+.laptop-mockup {
+  border-radius: 12px !important;
+}
+.laptop-mockup > div {
+  border-radius: 6px !important;
+}
+
+/* Carousel projets — cache la scrollbar */
+.projects-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Cartes Bento — ombre */
+.bento-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
 /* ─── Subtle grain overlay ─── */
 body::after {
   content: "";

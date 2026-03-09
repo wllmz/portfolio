@@ -34,6 +34,7 @@ const EXPERIENCES = [
     role: "Développeur Full Stack Freelance",
     company: "Alcma",
     period: "2025 – 2026",
+    sector: "Alcma est une entreprise de développement de logiciels.",
     bullets: [
       "Conception et développement d'un logiciel ERP sur mesure.",
       "Backend pour la facturation et la gestion de projet.",
@@ -46,6 +47,8 @@ const EXPERIENCES = [
     role: "Développeur Full Stack ",
     company: "MyLizy . Alternance",
     period: "2023 – 2025",
+    sector:
+      "MyLizy est une plateforme de mise en relaiton entre particulier et professionnel de la périnatalité.",
     bullets: [
       "Création du site MyLizy de A à Z avec React et Node.js.",
       "Conception de l'interface et des parcours utilisateurs sur Figma.",
@@ -58,6 +61,8 @@ const EXPERIENCES = [
     role: "Développeur Full Stack",
     company: "HipeKids . Alternance",
     period: "2022 – 2023",
+    sector:
+      "HiPe Kids est une école d'anglais en ligne qui propose des cours individuels avec des professeurs à l'accent natif.",
     bullets: [
       "Maintenance et évolution des sites clients.",
       "Création de nouveaux sites WordPress et Prestashop.",
@@ -70,6 +75,7 @@ const EXPERIENCES = [
     role: "Développeur Full Stack",
     company: "COFFEE-MARKETING · Alternance",
     period: "2021 – 2022",
+    sector: "Coffee Marketing est une agence de marketing digitale.",
     bullets: [
       "Maintenance et évolution des sites clients.",
       "Création de nouveaux sites WordPress et Prestashop.",
@@ -99,11 +105,20 @@ const FORMATIONS = [
 ];
 
 const CONTACTS = [
-  { icon: "✉", label: "william.martinez06500@gmail.com" },
-  { icon: "📞", label: "06 26 52 21 16" },
-  { icon: "🌍", label: "Paris, France" },
-  { icon: "🔗", label: "wllmz.fr" },
-  { icon: "⌨", label: "@wllmz — GitHub" },
+  {
+    href: "mailto:william.martinez06500@gmail.com",
+    label: "william.martinez06500@gmail.com",
+  },
+  {
+    href: "tel:0626522116",
+    label: "06 26 52 21 16",
+  },
+  {
+    href: "https://www.google.com/maps/place/Paris,+France",
+    label: "Paris, France",
+  },
+  { href: "https://wllmz.fr", label: "wllmz.fr" },
+  { href: "https://github.com/wllmz", label: "@wllmz — GitHub" },
 ];
 
 function SectionTitle({
@@ -183,14 +198,19 @@ export default function CvPage() {
             >
               ⬇ Télécharger en PDF
             </button>
-            {CONTACTS.map(({ icon, label }) => (
+            {CONTACTS.map(({ label }) => (
               <p
                 key={label}
                 className="flex items-center gap-2 text-xs print:text-slate-500"
                 style={{ color: "var(--muted)" }}
               >
-                <span style={{ color: ACCENT }}>{icon}</span>
-                {label}
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[--accent] transition-colors text-sm font-medium"
+                >
+                  <span style={{ color: ACCENT }}>{label}</span>
+                </a>
               </p>
             ))}
           </div>
@@ -214,6 +234,7 @@ export default function CvPage() {
                       style={{ backgroundColor: ACCENT, opacity: 0.15 }}
                     />
                   )}
+
                   {/* Puce */}
                   <span
                     className="absolute left-[-4px] top-[7px] h-2.5 w-2.5 transition-all duration-200 group-hover:scale-125"
@@ -232,11 +253,18 @@ export default function CvPage() {
                     </span>
                   </div>
                   <p
-                    className="text-xs font-semibold mb-2 transition-colors duration-200 group-hover:text-[--accent]"
+                    className="text-xs font-semibold mb-1 transition-colors duration-200 group-hover:text-[--accent]"
                     style={{ color: "var(--muted)" }}
                   >
                     {exp.company}
                   </p>
+                  <p
+                    className="text-xs font-semibold mb-2 transition-colors duration-200 group-hover:text-[--accent]"
+                    style={{ color: "var(--muted)" }}
+                  >
+                    {exp.sector}
+                  </p>
+
                   <ul className="space-y-1">
                     {exp.bullets.map((b) => (
                       <li

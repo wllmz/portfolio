@@ -316,7 +316,7 @@ export default function Hero() {
           </a>
           <a
             href="#contact"
-            className="px-6 py-3 text-sm font-bold tracking-wide transition-all duration-200 hover:opacity-90"
+            className="px-12 py-3 text-sm font-bold tracking-wide transition-all duration-200 hover:opacity-90"
             style={{ backgroundColor: "var(--accent)", color: "#ffffff" }}
           >
             Me contacter →
