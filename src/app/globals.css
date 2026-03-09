@@ -57,20 +57,6 @@ section {
   display: none;
 }
 
-/* Modal — cache la scrollbar */
-.modal-no-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.modal-no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Cartes Bento — ombre */
-.bento-card {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-}
-
 /* ─── Subtle grain overlay ─── */
 body::after {
   content: "";

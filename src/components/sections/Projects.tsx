@@ -9,6 +9,7 @@ type Project = {
   title: string;
   href: string;
   image?: string;
+  images?: string[];
   gradient?: string;
   role?: string;
   meta?: string;
@@ -34,6 +35,7 @@ const projects: Project[] = [
     title: "Alcma",
     href: "/alcma",
     image: "/sas.png",
+    images: ["/sas.png"],
     role: "Plateforme SaaS",
     meta: "Application de gestion interne",
     year: "2024",
@@ -56,6 +58,7 @@ const projects: Project[] = [
     title: "Freïa",
     href: "/freia",
     image: "/freia.png",
+    images: ["/freia.png"],
     role: "E-commerce",
     meta: "Boutique en ligne mode",
     year: "2024",
@@ -156,15 +159,21 @@ const modalZoomTransition = {
   damping: 35,
 };
 
-/** Laptop mockup */
-function LaptopMockup({ children }: { children: React.ReactNode }) {
+/** Laptop mockup — taille agrandie pour la popup */
+function LaptopMockup({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <div
-      className="laptop-mockup relative w-full max-w-[280px] sm:max-w-[340px] mx-auto"
+      className={`laptop-mockup relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[520px] mx-auto ${className}`}
       style={{
-        padding: "12px 12px 18px",
+        padding: "14px 14px 22px",
         background: "linear-gradient(145deg, #e8e8e8 0%, #d0d0d0 100%)",
-        boxShadow: "0 20px 40px -12px rgba(0,0,0,0.15)",
+        boxShadow: "0 24px 48px -12px rgba(0,0,0,0.18)",
       }}
     >
       <div
@@ -184,7 +193,103 @@ function LaptopMockup({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Modal projet — fond blanc, zoom, laptop mockup */
+type CarouselSlide = { type: "mockup"; src: string } | { type: "full"; src: string };
+
+/** Carousel images — clic pour alterner mockup/vue plein écran */
+function PopupCarousel({
+  project,
+  className = "",
+}: {
+  project: Project;
+  className?: string;
+}) {
+  const hasGradient = !project.image && !project.images?.length && project.gradient;
+
+  const slides: CarouselSlide[] = hasGradient
+    ? []
+    : (project.images?.length ? project.images : project.image ? [project.image] : []).flatMap(
+        (src) =>
+          [
+            { type: "mockup" as const, src },
+            { type: "full" as const, src },
+          ] as CarouselSlide[]
+      );
+
+  const [index, setIndex] = useState(0);
+  const hasMultipleViews = slides.length > 1;
+
+  if (hasGradient) {
+    return (
+      <div className={className}>
+        <LaptopMockup>
+          <div
+            className="absolute inset-0"
+            style={{ background: project.gradient }}
+          />
+        </LaptopMockup>
+      </div>
+    );
+  }
+
+  if (slides.length === 0) return null;
+
+  const slide = slides[index];
+
+  return (
+    <div
+      className={`overflow-hidden ${className}`}
+      onClick={() => hasMultipleViews && setIndex((i) => (i + 1) % slides.length)}
+      role={hasMultipleViews ? "button" : undefined}
+      tabIndex={hasMultipleViews ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (hasMultipleViews && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          setIndex((i) => (i + 1) % slides.length);
+        }
+      }}
+      style={{
+        cursor: hasMultipleViews ? "pointer" : "default",
+      }}
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="w-full"
+        >
+          {slide.type === "mockup" ? (
+            <LaptopMockup>
+              <Image
+                src={slide.src}
+                alt={`${project.title} - capture ${index + 1}`}
+                fill
+                draggable={false}
+                className="object-cover object-top"
+                sizes="(min-width: 1024px) 520px, (min-width: 640px) 420px, 320px"
+              />
+            </LaptopMockup>
+          ) : (
+            <div className="relative w-full aspect-[16/10] overflow-hidden bg-[#1a1a1a]">
+              <Image
+                src={slide.src}
+                alt={`${project.title} - vue ${index + 1}`}
+                fill
+                draggable={false}
+                className="object-cover object-top"
+                sizes="(min-width: 1024px) 520px, (min-width: 640px) 420px, 320px"
+              />
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/** Modal projet — une popup par projet */
 function ProjectModal({
   isOpen,
   onClose,
@@ -209,7 +314,7 @@ function ProjectModal({
           transition={backdropTransition}
         >
           <motion.div
-            className="relative z-10 w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col bg-white p-6 sm:p-8 rounded-2xl"
+            className="relative z-10 w-full max-w-5xl max-h-[90vh] overflow-y-auto overflow-x-hidden flex flex-col bg-white p-4 sm:p-6 lg:p-8 rounded-2xl"
             onClick={(e) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -218,7 +323,7 @@ function ProjectModal({
           >
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700"
+              className="absolute top-4 right-4 lg:-top-3 lg:-right-3 w-10 h-10 flex items-center justify-center rounded-full text-gray-500 z-20"
               aria-label="Fermer"
             >
               <svg
@@ -234,7 +339,7 @@ function ProjectModal({
               </svg>
             </button>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 overflow-hidden pt-2">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 overflow-hidden pt-2">
               <div className="lg:col-span-5 space-y-3 flex-shrink-0">
                 <h2
                   className="text-xl sm:text-2xl font-bold"
@@ -267,7 +372,10 @@ function ProjectModal({
                       <span
                         key={tech}
                         className="text-xs px-2 py-1"
-                        style={{ color: "#6b7280", backgroundColor: "#f3f4f6" }}
+                        style={{
+                          color: "#6b7280",
+                          backgroundColor: "#f3f4f6",
+                        }}
                       >
                         {tech}
                       </span>
@@ -276,23 +384,8 @@ function ProjectModal({
                 </div>
               </div>
 
-              <div className="lg:col-span-7 flex items-center justify-center flex-shrink-0">
-                <LaptopMockup>
-                  {project.image ? (
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover object-top"
-                      sizes="(min-width: 1024px) 700px, 100vw"
-                    />
-                  ) : (
-                    <div
-                      className="absolute inset-0"
-                      style={{ background: project.gradient }}
-                    />
-                  )}
-                </LaptopMockup>
+              <div className="lg:col-span-7 flex items-center justify-center flex-shrink-0 min-w-0">
+                <PopupCarousel project={project} className="w-full" />
               </div>
             </div>
           </motion.div>
